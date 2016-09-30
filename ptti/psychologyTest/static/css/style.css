@@ -1,0 +1,9 @@
+.form-signin {
+    width: 300px;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.form-signin h2 {
+    color: #fff;
+}
