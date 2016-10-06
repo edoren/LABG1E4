@@ -1,40 +1,82 @@
 {% extends 'base.html'%}
 
+{% block title %}PTTI{% endblock %}
 
 {% block css %}
 <style type="text/css">
-      .container_2{
-        margin-top: 50px;
-      }
+body {
+    padding-top: 54px;
+}
 </style>
 {% endblock %}
 
 {% block body %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Psychology Test</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse" >
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ user.username }}</a></li>
-            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión </li></a>          
-
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container_2">
-    {% block container %}
-      
-    {% endblock %}
-
-    </div><!-- /.container -->
+<nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+  <button class="navbar-toggler pull-xs-right hidden-sm-up border" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar" aria-controls="exCollapsingNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="material-icons md-16">menu</i>
+  </button>
+  <a class="navbar-brand" href="#">PTTI</a>
+  <div class="collapse navbar-toggleable-xs align-vertical" id="exCollapsingNavbar">
+    <ul class="nav navbar-nav pull-xs-left">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <a class="nav-item nav-link" href="#">Settings</a>
+      <a class="nav-item nav-link" href="#">Profile</a>
+    </ul>
+    <ul class="nav navbar-nav pull-xs-right">
+      <a class="nav-item nav-link" href="/">
+        <i class="material-icons md-16 align-vertical">account_circle</i>
+        {{ user.username }}
+      </a>
+      <a class="nav-item nav-link" href="/logout">
+        <i class="material-icons md-16 align-vertical">exit_to_app</i>
+        Cerrar Sesión
+      </a>
+    </ul>
+  </div>
+</nav>
+<div id="wrapper">
+  <div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+      <!--<li class="sidebar-brand">
+        <a href="#">
+        Start Bootstrap
+        </a>
+      </li>-->
+      <li>
+        <a href="#">Dashboard</a>
+      </li>
+      <li>
+        <a href="#">Shortcuts</a>
+      </li>
+      <li>
+        <a href="#">Overview</a>
+      </li>
+      <li>
+        <a href="#">Events</a>
+      </li>
+      <li>
+        <a href="#">About</a>
+      </li>
+      <li>
+        <a href="#">Services</a>
+      </li>
+      <li>
+        <a href="#">Contact</a>
+      </li>
+    </ul>
+  </div>
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      {% block page-content %}{% endblock %}
+    </div>
+  </div>
+</div>
+<script>
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+});
+</script>
 {% endblock %}

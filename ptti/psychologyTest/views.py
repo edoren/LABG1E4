@@ -41,4 +41,4 @@ def logout_page(request):
 
 @login_required(login_url='/')
 def home(request):
-    return render(request, "home.html", {})
+    return render(request, "home_admin.html", {})
