@@ -5,7 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from ptti.psychologyTest.models import Perfil_admin
+from psychologyTest.models import Perfil_usuario, Institucion, Admin, Grupo, Grupo_institucion, Estudiante, Psicologo
+
+from django.shortcuts import render_to_response#
+from django.template import RequestContext#
+from psychologyTest.forms import addPerfil_usuarioForms, addInstitucionForms, addAdminForms, addGrupoForms, addGrupo_institucionFomrs, addEstudianteForms, addPsicologoForms
+from django.conf import settings
 
 def login_page(request):
     print "login_page"
