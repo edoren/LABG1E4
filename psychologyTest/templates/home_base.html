@@ -18,11 +18,12 @@ body {
   <a class="navbar-brand" href="#">PTTI</a>
   <div class="collapse navbar-toggleable-xs align-vertical" id="exCollapsingNavbar">
     <ul class="nav navbar-nav pull-xs-left">
-      <li class="nav-item active">
+      <!--<li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
       <a class="nav-item nav-link" href="#">Settings</a>
-      <a class="nav-item nav-link" href="#">Profile</a>
+      <a class="nav-item nav-link" href="#">Profile</a>-->
+      <a class="nav-item nav-link" href="#menu-toggle" id="menu-toggle">Toggle Menu</button>
     </ul>
     <ul class="nav navbar-nav pull-xs-right">
       <a class="nav-item nav-link" href="/">
@@ -44,27 +45,7 @@ body {
         Start Bootstrap
         </a>
       </li>-->
-      <li>
-        <a href="#">Dashboard</a>
-      </li>
-      <li>
-        <a href="#">Shortcuts</a>
-      </li>
-      <li>
-        <a href="#">Overview</a>
-      </li>
-      <li>
-        <a href="#">Events</a>
-      </li>
-      <li>
-        <a href="#">About</a>
-      </li>
-      <li>
-        <a href="#">Services</a>
-      </li>
-      <li>
-        <a href="#">Contact</a>
-      </li>
+      {% block sidebar-content %}{% endblock %}
     </ul>
   </div>
   <div id="page-content-wrapper">

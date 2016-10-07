@@ -1,14 +1,66 @@
 {% extends "home_base.html"%}
 
-{% block page-content %}
+{% block sidebar-content %}
+<li>
+  <a href="#">Estudiantes</a>
+</li>
+<li>
+  <a href="#">Psicologos</a>
+</li>
+<li>
+  <a href="#">Todo</a>
+</li>
+{% endblock %}
 
+{% block page-content %}
 <div class="row">
-  <div class="col-xs">
-    <h1>Lorem ipsum dolor</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec arcu nisi. Sed dictum felis vitae velit pulvinar, eu dignissim sapien tempus. Donec vel lectus vitae quam blandit pretium et eget sapien. Phasellus laoreet lacus id aliquet dictum. Quisque eu nisl velit. Fusce eu purus eget metus ultricies pellentesque. Suspendisse tellus lorem, iaculis a consectetur eget, suscipit eu dui. Integer suscipit neque sed magna cursus mattis.</p>
-    <p>Morbi vulputate mi metus, fermentum faucibus ligula rutrum et. Sed vel tincidunt quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed dictum ac lectus et lobortis. Fusce et tincidunt turpis. Suspendisse commodo imperdiet dolor in molestie. Aliquam erat volutpat. Morbi dictum convallis euismod. Nulla condimentum posuere feugiat. Nulla sit amet velit egestas enim tempus cursus imperdiet nec est.</p>
-    <button type="button" class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+  <div class="col-xs-12">
+    <h2>Administración</h2>
   </div>
 </div>
-
+<div class="row top-buffer">
+  <div class="col-xs-6">
+    <button class="btn btn-primary" type="submit">Crear</button>
+    <button class="btn btn-warning" type="submit">Modificar</button>
+    <button class="btn btn-danger w-100px" type="submit">Eliminar</button>
+  </div>
+  <div class="col-xs-6">
+    <form class="form-inline pull-xs-right">
+      <input class="form-control" type="text" placeholder="Search">
+      <button class="btn btn-outline-success" type="submit">Buscar</button>
+    </form>
+  </div>
+</div>
+<div class="row top-buffer">
+  <div class="col-xs-12">
+    <div class="table-responsive table-hover">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>CC</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Email</th>
+            <th>Contraseña</th>
+            <th>Status</th>
+            <th>Institución</th>
+            <th>Grupo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

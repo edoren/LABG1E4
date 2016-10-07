@@ -1,14 +1,65 @@
 {% extends "home_base.html"%}
 
-{% block page-content %}
+{% block sidebar-content %}
+<li>
+  <a href="#">A</a>
+</li>
+<li>
+  <a href="#">B</a>
+</li>
+<li>
+  <a href="#">C</a>
+</li>
+{% endblock %}
 
+{% block page-content %}
 <div class="row">
-  <div class="col-lg-12">
-    <h1>Simple Sidebar</h1>
-    <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-    <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
-    <button type="button" class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+  <div class="col-md-8 nopadding">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Estudiante</h2>
+      </div>
+    </div>
+    <div class="row top-buffer">
+      <div class="col-md-12">
+        <form class="form-inline pull-xs-right">
+          <input class="form-control" type="text" placeholder="Search">
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+    <div class="row top-buffer">
+      <div class="col-md-12">
+        <div class="table-responsive table-hover">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Test</th>
+                <th>Estado</th>
+                <th>Resultado</th>
+                <th>Diagnostico</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-block">
+        <h2>Diagnóstico</h2>
+        <p>Lorem ipsum dolor sit amet, lorem mandamus assentior ut mea, at summo detracto scribentur sea, mea officiis repudiandae te. Et reque efficiendi vel. Usu iusto dolor elaboraret at, facer aliquam cum et. Decore accusamus torquatos quo no. Vix liber persius ancillae ne, nullam vivendum philosophia ne pro.</p>
+      </div>
+    </div>
   </div>
 </div>
-
 {% endblock %}

@@ -142,6 +142,15 @@ body {
     background: none;
 }
 
+.top-buffer {
+    margin-top:20px;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
 @media(min-width:768px) {
     #wrapper {
         padding-left: 250px;
