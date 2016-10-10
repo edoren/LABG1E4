@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "gulp install_typings"
   },
   "author": "",
-  "license": "ISC",
+  "license": "",
   "dependencies": {
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.0.2",
-    "typescript": "^2.0.3"
+    "gulp-typings": "^2.0.4",
+    "typescript": "^2.0.3",
+    "typings": "^1.4.0"
   }
 }

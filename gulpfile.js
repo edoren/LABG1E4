@@ -1,7 +1,8 @@
 const gulp = require("gulp")
-const tsc = require("gulp-typescript")
+const gulp_typings = require("gulp-typings");
+const gulp_typescript = require("gulp-typescript")
 
-var ts_project = tsc.createProject("./tsconfig.json");
+var ts_project = gulp_typescript.createProject("./tsconfig.json");
 
 var source_folder = "psychologyTest/static/src";
 var build_folder = "psychologyTest/static/js";
@@ -17,6 +18,10 @@ var paths = {
     ]
 };
 
+gulp.task("install_typings", function () {
+    return gulp.src("./typings.json").pipe(gulp_typings());
+});
+
 gulp.task("compile", function () {
     return gulp.src(paths.source_files.concat(paths.typings))
         .pipe(ts_project()).js
@@ -27,7 +32,7 @@ gulp.task("watch", function () {
     gulp.watch(paths.source_files, ["compile"]);
 });
 
-gulp.task("runserver", ["compile"],  function () {
+gulp.task("runserver", ["compile"], function () {
     const spawn = require("child_process").spawn;
 
     var address = process.env.ADDRESS || "localhost";
@@ -37,7 +42,7 @@ gulp.task("runserver", ["compile"],  function () {
         stdio: "inherit"
     });
 
-    server.on("close", function(code) {
+    server.on("close", function (code) {
         if (code !== 0) {
             console.log(`server process exited with code ${code}`);
         }
