@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from django import forms
+from django.forms import ModelForm
 from models import Perfil_usuario, Institucion, Admin, Grupo, Grupo_institucion, Estudiante, Psicologo
 
 CAMBIO_DOCUMENTO = (('TI','Tarjeta de Identidad'), ('CC','Cedula de Ciudadania'), ('CE','Cedula de Extranjería'))
@@ -7,7 +8,26 @@ CAMBIO_GENERO = (('M','Masculino'),('F','Femenino'),('O','Lgtbi'))
 CAMBIO_ROL = (('ADMIN','Administrador'),('PSI','Psicólogo'),('EST','Estudiante'))
 
 
-class addPerfil_usuarioForms(forms.Form):
+class addPerfil_usuarioForms(ModelForm):
+
+    class Meta:
+        model = Perfil_usuario
+        fields = [
+            "tipo_documento",
+            "Nro_dodocumento",
+            "genero",
+            "primer_nombre",
+            "segundo_nombre",
+            "primer_apellido",
+            "segundo_apellido",
+            "fecha_nacimiento",
+            "direccion",
+            "telefono",
+            "email",
+            "contrasena",
+            "rol",
+            "estado_activo"
+        ]
 
 	DATEPICKER = {
         'type': 'text',
@@ -31,14 +51,14 @@ class addPerfil_usuarioForms(forms.Form):
 	rol = forms.ChoiceField(required=True,widget=forms.Select,choices=CAMBIO_ROL)#
 	estado_activo = forms.BooleanField( required=True)
 
-	def clean(self):
-		return self.cleaned_data
+	# def clean(self):
+	# 	return self.cleaned_data
 
 class addInstitucionForms(forms.Form):
 	nit = forms.CharField(required=True, label='Número de Nit',  widget= forms.TextInput(attrs={'size': 20, 'title': 'Número de Nit',}))#
 #	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
 	#usuario = forms.ForeignKey(Perfil_usuario)
-	
+
 	nombre = forms.CharField(required=True, label='Nombre instutución', widget= forms.TextInput(attrs={'size': 30, 'title': 'Nombre instutución',}))#
 	direccion = forms.CharField(required=True, label='Dirección de la institución', widget= forms.TextInput(attrs={'size': 30, 'title': 'Dirección de la institución',}))#
 	ciudad = forms.CharField(required=True, label='Cuidad', widget= forms.TextInput(attrs={'size': 30, 'title': 'Cuidad',}))#
@@ -46,7 +66,7 @@ class addInstitucionForms(forms.Form):
 	sitio_web = forms.URLField(required=True, label='Sitio Web')#
 
 	estado_activo = forms.BooleanField( required=True)
-	
+
 class addAdminForms(forms.Form):
    # usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
    # institucion  = models.ForeignKey(Institucion)
@@ -79,4 +99,4 @@ class addPsicologoForms(forms.Form):
 	#usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
 
 	estado_activo = forms.BooleanField( required=True)
-	
+

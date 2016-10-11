@@ -11,6 +11,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from psychologyTest.forms import addPerfil_usuarioForms, addInstitucionForms, addAdminForms, addGrupoForms, addGrupo_institucionFomrs, addEstudianteForms, addPsicologoForms
 from django.conf import settings
+from .forms import addPerfil_usuarioForms
 
 def login_page(request):
     print "login_page"
@@ -46,7 +47,27 @@ def logout_page(request):
 
 @login_required(login_url='/')
 def home(request):
-    perfil_usuario = Perfil_usuario.objects.all()
+    perfil_usuario = Perfil_usuario.objects.filter(estado_activo=True)
+
+    if request.POST:
+        print "es un post"
+        form = addPerfil_usuarioForms(request.POST)
+        if  form.is_valid():
+
+            form.save()
+            print "Si es valido"
+
+            # return HttpResponseRedirect('/duenos')
+        else:
+            print "no es valido"
+            print form.errors
+    elif request.GET:
+        id_obj = request.GET.get("id")
+        obj = Perfil_usuario.objects.get(pk=id_obj)
+        print obj
+    # else:
+    #     form = addPerfil_usuarioForms()
+
     return render(request, "home_admin.html", {"perfil_usuario":perfil_usuario})
 
 def register(request):
@@ -72,3 +93,61 @@ def manage_institutions(request):
 @login_required(login_url='/')
 def edit_student_profile(request):
     return render(request, "edit_student_profile.html", {})##terminar
+
+# @login_required
+# def add_dueno(request):
+#     if request.POST:
+#         form = UsuarioForm(request.POST)
+#         if  form.is_valid():
+#             usuario = form.save(commit=False)
+#             usuario.username = request.POST['documento']
+#             usuario.tipo_usuario = 2
+#             usuario.set_password(request.POST['password'])
+#             usuario.user_creator = request.user
+#             usuario.save()
+#             return HttpResponseRedirect('/duenos')
+#     else:
+#         form = UsuarioForm()
+#     return render(request, 'add_dueno.html', locals())
+
+# @login_required
+# def edit_dueno(request, user_id=None):
+#     if user_id:
+#         usuario = get_object_or_404(Usuario, pk=user_id, is_active=True)
+#         usuario.password = None
+#         if usuario.user_creator != request.user:
+#             return HttpResponseForbidden()
+#     else:
+#         return HttpResponseForbidden()
+
+#     if request.POST:
+#         form = UsuarioForm(request.POST, instance=usuario)
+#         if form.is_valid():
+#             usuario.set_password(request.POST['password'])
+#             usuario.username = request.POST['documento']
+#             form.save()
+#             return HttpResponseRedirect('/duenos')
+
+#     else:
+#         form = UsuarioForm(instance=usuario)
+
+#     return render(request, 'add_dueno.html', locals())
+
+# @login_required
+# def show_dueno(request, user_id):
+#     user = get_object_or_404(Usuario, pk = user_id, is_active=True)
+#     if user.user_creator != request.user:
+#             return HttpResponseForbidden()
+#     active_tab = "duenos"
+#     return render(request, 'show_user.html', locals())
+
+
+
+# @login_required
+# def delete_dueno(request, user_id):
+#     user = get_object_or_404(Usuario, pk = user_id, is_active=True)
+#     if user.user_creator != request.user:
+#             return HttpResponseForbidden()
+#     user.is_active = False
+#     user.save()
+#     return HttpResponseRedirect('/duenos')
