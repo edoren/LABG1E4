@@ -96,3 +96,6 @@ typings/
 
 # TypeScript compiled files
 psychologyTest/static/js
+
+# Python virtualenv folder
+enviroment/

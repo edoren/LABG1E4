@@ -1,16 +1,4 @@
-{% extends "home_base.html"%}
-
-{% block sidebar-content %}
-<li>
-  <a href="#">A</a>
-</li>
-<li>
-  <a href="#">B</a>
-</li>
-<li>
-  <a href="#">C</a>
-</li>
-{% endblock %}
+{% extends "base_admin.html"%}
 
 {% block page-content %}
 <div class="row">
@@ -34,7 +22,7 @@
 <div class="row p-t-1">
   <div class="col-xs-12 p-a-0">
     <div class="table-responsive table-hover">
-      <table class="table">
+      <table id="table-select" class="table">
         <thead>
           <tr>
             <th>CC</th>

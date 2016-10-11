@@ -22,6 +22,16 @@
 <div class="row flex-items-xs-middle fill_parent">
   <div class="col-xs p-a-0">
     <div class="bg-inverse p-y-3">
+      <div class="form-group row flex-items-md-middle">
+          <label for="role-input" class="col-md-3 col-form-label">Rol</label>
+          <div class="col-md-9">
+            <select name="rol" class="custom-select">
+              <option value="A" selected>Administrador</option>
+              <option value="P" selected>Psicólogo</option>
+              <option value="E">Estudiante</option>
+            </select>
+          </div>
+        </div>
       <center class="m-b-1"><h2>Ingreso a Pyscology Test</h2></center>
       <form class="form-signin m-x-auto" method="post">
         {% csrf_token %}
@@ -35,7 +45,7 @@
         </div>
         <button class="btn btn-primary btn-block" type="submit">Iniciar</button>
       </form>
-      <center class="m-t-1"><a href="{% url 'restore_password' %}">Olvidé mi contraseña</a></center>
+      <center class="m-t-1"><a href="#">Olvidé mi contraseña</a></center>
     </div>
   </div>
   </div>

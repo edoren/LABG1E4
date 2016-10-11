@@ -7,8 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from psychologyTest.models import Perfil_usuario, Institucion, Admin, Grupo, Grupo_institucion, Estudiante, Psicologo
 
-from django.shortcuts import render_to_response#
-from django.template import RequestContext#
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from psychologyTest.forms import addPerfil_usuarioForms, addInstitucionForms, addAdminForms, addGrupoForms, addGrupo_institucionFomrs, addEstudianteForms, addPsicologoForms
 from django.conf import settings
 
@@ -47,3 +47,25 @@ def logout_page(request):
 @login_required(login_url='/')
 def home(request):
     return render(request, "home_admin.html", {})
+
+def register(request):
+    return render(request, "register.html", {})
+
+def restore_password(request):
+    return render(request, "restore_password.html", {})
+
+@login_required(login_url='/')
+def manage_users(request):
+    return render(request, "manage_users.html", {})
+
+@login_required(login_url='/')
+def manage_groups(request):
+    return render(request, "manage_groups.html", {})
+
+@login_required(login_url='/')
+def manage_institutions(request):
+    return render(request, "manage_institutions.html", {})
+
+@login_required(login_url='/')
+def edit_student_profile(request):
+    return render(request, "edit_student_profile.html", {})

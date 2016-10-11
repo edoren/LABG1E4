@@ -16,124 +16,119 @@
   <button type="button" class="close" data-dismiss="alert">
     <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
   </button>
-  <strong>Error:</strong> {{ error }}
+  <strong>Error: {{ error }}</strong>
 </div>
 {% endif %}
 <div class="row">
-  <form class="col-xs">
+  <form class="col-xs-8 m-x-auto p-y-1">
     {% csrf_token %}
-    <div class="form-group row flex-items-md-middle">
-      <label for="id-type-input" class="col-md-3 col-form-label">Tipo de identificación</label>
-      <div class="col-md-9">
-        <select name="tipo_documento" class="custom-select">
-          <option value="TI">Tarjeta de Identidad</option>
-          <option value="CC" selected>Cédula de Ciudadanía</option>
-          <option value="CE">Cédula de Extranjería</option>
-        </select>
+    <div class="card">
+      <div class="card-block p-x-3">
+        <div class="form-group row flex-items-md-middle">
+          <label for="role-input" class="col-md-3 col-form-label">Rol</label>
+          <div class="col-md-9">
+            <select name="genero" class="custom-select">
+              <!--<option value="A" selected>Administrador</option>-->
+              <option value="P">Psicólogo</option>
+              <option value="E">Estudiante</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="id-type-input" class="col-md-3 col-form-label">Tipo de identificación</label>
+          <div class="col-md-9">
+            <select name="tipo_documento" class="custom-select">
+              <option value="TI">Tarjeta de Identidad</option>
+              <option value="CC" selected>Cédula de Ciudadanía</option>
+              <option value="CE">Cédula de Extranjería</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="id-number-input" class="col-md-3 col-form-label">Número de identificación</label>
+          <div class="col-md-9">
+            <input name="Nro_dodocumento" type="text" id="input_no_documento" class="form-control" placeholder="Número Documento" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="name-input" class="col-md-3 col-form-label">Nombres</label>
+          <div class="col-md-9">
+            <input name="primer_nombre" type="text" id="input_nombre" class="form-control" placeholder="Primero" required>
+            <input name="segundo_nombre" type="text" id="input_nombre" class="form-control" placeholder="Segundo">
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="lastname-input" class="col-md-3 col-form-label">Apellidos</label>
+          <div class="col-md-9">
+            <input name="primer_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Primero" required>
+            <input name="segundo_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Segundo">
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
+          <div class="col-md-5">
+            <input name="fecha_nacimiento" type="date" id="datepicker" class="form-control" placeholder="DD/MM/YY" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="gender-input" class="col-md-3 col-form-label">Genero</label>
+          <div class="col-md-9">
+            <select name="genero" class="custom-select">
+              <option value="M">Masculino</option>
+              <option value="F" selected>Femenino</option>
+              <option value="O">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="address-input" class="col-md-3 col-form-label">Dirección</label>
+          <div class="col-md-9">
+            <input name="direccion" type="text" class="form-control" placeholder="Dirección" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="phone-input" class="col-md-3 col-form-label">Teléfono</label>
+          <div class="col-md-9">
+            <input name="telefono" type="tel" class="form-control" placeholder="Teléfono" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="email-input" class="col-md-3 col-form-label">Email</label>
+          <div class="col-md-9">
+            <input name="email" type="email" class="form-control" placeholder="Email" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="password-input" class="col-md-3 col-form-label">Contraseña</label>
+          <div class="col-md-9">
+            <input name="contrasena" type="password" class="form-control" placeholder="Contraseña" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="password-repeat-input" class="col-md-3 col-form-label">Repetir Contraseña</label>
+          <div class="col-md-9">
+            <input name="repetir_contrasena" type="password" class="form-control" placeholder="Repetir Contraseña" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <label for="group-input" class="col-md-3 col-form-label">Grupo</label>
+          <div class="col-md-9">
+            <input name="grupo" type="text" class="form-control" placeholder="Grupo" required>
+          </div>
+        </div>
+        <div class="form-group row flex-items-md-middle">
+          <div class="col-md-12 m-t-1">
+            <center>
+              <button class="btn btn-lg btn-primary" type="submit">Registrarse</button>
+            </center>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="id-number-input" class="col-md-3 col-form-label">Número de identificación</label>
-      <div class="col-md-9">
-        <input name="Nro_dodocumento" type="text" id="input_no_documento" class="form-control" placeholder="Número Documento" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="name-input" class="col-md-3 col-form-label">Nombres</label>
-      <div class="col-md-9">
-        <input name="primer_nombre" type="text" id="input_nombre" class="form-control" placeholder="Primero" required>
-        <input name="segundo_nombre" type="text" id="input_nombre" class="form-control" placeholder="Segundo" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="lastname-input" class="col-md-3 col-form-label">Apellidos</label>
-      <div class="col-md-9">
-        <input name="primer_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Primero" required>
-        <input name="segundo_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Segundo" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
-      <div class="col-md-5">
-        <input name="fecha_nacimiento" type="date" id="datepicker" class="form-control" placeholder="DD/MM/YY" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="gender-input" class="col-md-3 col-form-label">Genero</label>
-      <div class="col-md-9">
-        <select name="genero" class="custom-select">
-          <option value="M" selected>Masculino</option>
-          <option value="F">Femenino</option>
-          <option value="O">Otro</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="address-input" class="col-md-3 col-form-label">Dirección</label>
-      <div class="col-md-9">
-        <input name="direccion" type="text" class="form-control" placeholder="Dirección" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="phone-input" class="col-md-3 col-form-label">Teléfono</label>
-      <div class="col-md-9">
-        <input name="telefono" type="tel" class="form-control" placeholder="Teléfono" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="email-input" class="col-md-3 col-form-label">Email</label>
-      <div class="col-md-9">
-        <input name="email" type="email" class="form-control" placeholder="Email" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="password-input" class="col-md-3 col-form-label">Contraseña</label>
-      <div class="col-md-9">
-        <input name="contrasena" type="password" class="form-control" placeholder="Contraseña" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="password-repeat-input" class="col-md-3 col-form-label">Repetir Contraseña</label>
-      <div class="col-md-9">
-        <input name="repetir_contrasena" type="password" class="form-control" placeholder="Repetir Contraseña" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="group-input" class="col-md-3 col-form-label">Grupo al que pertenece</label>
-      <div class="col-md-9">
-        <input name="grupo" type="text" class="form-control" placeholder="Repetir Contraseña" required>
-      </div>
-    </div>
-    <div class="form-group row flex-items-md-middle">
-      <label for="role-input" class="col-md-3 col-form-label">Roles</label>
-      <div class="col-md-3">
-        <label class="custom-control custom-checkbox">
-          <input id="radio1" name="radio" type="checkbox" class="custom-control-input">
-          <span class="custom-control-indicator"></span>
-          <span class="custom-control-description">Estudiante</span>
-        </label>
-      </div>
-      <div class="col-md-3">
-        <label class="custom-control custom-checkbox">
-          <input id="radio2" name="radio" type="checkbox" class="custom-control-input">
-          <span class="custom-control-indicator"></span>
-          <span class="custom-control-description">Psicólogo</span>
-        </label>
-      </div>
-      <div class="col-md-3">
-        <label class="custom-control custom-checkbox">
-          <input id="radio3" name="radio" type="checkbox" class="custom-control-input">
-          <span class="custom-control-indicator"></span>
-          <span class="custom-control-description">Administrador</span>
-        </label>
-      </div>
-    </div>
-    <center><button class="btn btn-lg btn-primary m-t-1" type="submit">Recuperar</button><center>
   </form>
 </div>
 <script>
 $(function() {
     $("#datepicker").datepicker({showAnim: 'slideDown'});
 });
-</script>
-{% endblock %}
+</script> {% endblock %}
