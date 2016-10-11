@@ -9,8 +9,6 @@
 <div class="row p-t-1">
   <div class="col-xs-4 p-l-0">
     <button class="btn btn-primary" id="create_user_btn" data-toggle="modal" data-target="#create_user">Crear</button>
-    <button class="btn btn-warning" id="modify_user_btn">Modificar</button>
-    <button class="btn btn-danger" id="remove_user_btn">Eliminar</button>
 
   </div>
   <div class="col-xs-4 p-x-0">
@@ -31,46 +29,39 @@
         <thead>
           <tr>
             <th>CC</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
+            <th>Primer Nombre</th>
+            <th>Segundo Nombre</th>
+            <th>Primer Apellido</th>
+            <th>Segundo Apellido</th>
             <th>Email</th>
             <th>Contraseña</th>
             <th>Status</th>
-            <th>Institución</th>
-            <th>Grupo</th>
+            <th>Rol</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
+        {% for pu in perfil_usuario %}
           <tr>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{ pu.Nro_dodocumento }}</td>
+            <td>{{ pu.primer_nombre }}</td>
+            <td>{{ pu.segundo_nombre }}</td>
+            <td>{{ pu.primer_apellido }}</td>
+            <td>{{ pu.segundo_apellido }}</td>
+            <td>{{ pu.email }}</td>
+            <td>{{ pu.contrasena }}</td>
+            <td>{{ pu.estado_activo }}</td>
+            <td>{{ pu.rol }}</td>
+            <td>
+              <button class="btn btn-warning" id="modify_user_btn">
+                <span class="glyphicon glyphicon-pencil">Editar</span>
+              </button>
+              <button class="btn btn-danger" id="remove_user_btn">
+                <span class="glyphicon glyphicon-remove">Eliminar</span>
+              </button>
+            </td>
           </tr>
-          <tr>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>

@@ -46,26 +46,29 @@ def logout_page(request):
 
 @login_required(login_url='/')
 def home(request):
-    return render(request, "home_admin.html", {})
+    perfil_usuario = Perfil_usuario.objects.all()
+    return render(request, "home_admin.html", {"perfil_usuario":perfil_usuario})
 
 def register(request):
-    return render(request, "register.html", {})
+    return render(request, "register.html", {})##arreglar
 
 def restore_password(request):
-    return render(request, "restore_password.html", {})
+    return render(request, "restore_password.html", {})####
 
 @login_required(login_url='/')
 def manage_users(request):
-    return render(request, "manage_users.html", {})
+    return render(request, "manage_users.html", {})##NO
 
 @login_required(login_url='/')
 def manage_groups(request):
-    return render(request, "manage_groups.html", {})
+    grupo = Grupo.objects.all()
+    return render(request, "manage_groups.html", {"grupo":grupo})
 
 @login_required(login_url='/')
 def manage_institutions(request):
-    return render(request, "manage_institutions.html", {})
+    institucion = Institucion.objects.all()
+    return render(request, "manage_institutions.html", {"institucion":institucion})
 
 @login_required(login_url='/')
 def edit_student_profile(request):
-    return render(request, "edit_student_profile.html", {})
+    return render(request, "edit_student_profile.html", {})##terminar
