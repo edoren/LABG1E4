@@ -19,6 +19,11 @@
   <strong>Error: {{ error }}</strong>
 </div>
 {% endif %}
+<div class="row p-t-1">
+  <div class="col-xs-8 m-x-auto text-xs-center">
+      <h2>Registrarse</h2>
+  </div>
+</div>
 <div class="row">
   <form class="col-xs-8 m-x-auto p-y-1">
     {% csrf_token %}
@@ -66,7 +71,7 @@
         </div>
         <div class="form-group row flex-items-md-middle">
           <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
-          <div class="col-md-5">
+          <div class="col-md-9">
             <input name="fecha_nacimiento" type="date" id="datepicker" class="form-control" placeholder="DD/MM/YY" required>
           </div>
         </div>
@@ -76,7 +81,7 @@
             <select name="genero" class="custom-select w-100">
               <option value="M">Masculino</option>
               <option value="F" selected>Femenino</option>
-              <option value="O">LGTBI</option>
+              <option value="O">Other</option>
             </select>
           </div>
         </div>
@@ -117,10 +122,9 @@
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <div class="col-md-12 m-t-1">
-            <center>
-              <button class="btn btn-lg btn-primary" type="submit">Registrarse</button>
-            </center>
+          <div class="col-md-12 m-x-auto text-xs-center m-t-1">
+              <button class="btn btn-lg btn-primary m-r-1" type="submit">Registrarse</button>
+              <a class="btn btn-lg btn-primary m-l-1" href="{% url 'login_page' %}">Cancelar</a>
           </div>
         </div>
       </div>

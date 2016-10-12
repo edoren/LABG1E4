@@ -1,4 +1,6 @@
-{% extends "base_psycologist.html"%}
+{% extends "base_admin.html"%}
+
+{% block title %}PTTI - Gestión de Grupos{% endblock %}
 
 {% block page-content %}
 <div class="row">
@@ -9,7 +11,8 @@
 <div class="row p-t-1">
   <div class="col-xs-6 p-l-0">
     <button class="btn btn-primary" id="create_group_btn" data-toggle="modal" data-target="#create_group">Crear</button>
-
+    <button class="btn btn-warning" id="modify_group_btn">Editar</button>
+    <button class="btn btn-danger" id="remove_group_btn">Eliminar</button>
   </div>
   <div class="col-xs-6 p-r-0">
     <form class="form-inline pull-xs-right">
@@ -23,13 +26,12 @@
     <div class="table-responsive table-hover">
       <table id="table-select" class="table">
         <thead>
-          <tr>
+          <tr group-id="{{ gr.id }}">
             <th>Nombre</th>
             <th>Institución</th>
             <th>Grado</th>
             <th>Jornada</th>
             <th>Status</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -40,14 +42,6 @@
             <td>{{ gr.grado }}</td>
             <td>{{ gr.jornada }}</td>
             <td>{{ gr.estado_activo }}</td>
-            <td>
-              <button class="btn btn-warning" id="modify_user_btn">
-                <span class="glyphicon glyphicon-pencil">Editar</span>
-              </button>
-              <button class="btn btn-danger" id="remove_user_btn">
-                <span class="glyphicon glyphicon-remove">Eliminar</span>
-              </button>
-            </td>
           </tr>
           {% endfor %}
         </tbody>

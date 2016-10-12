@@ -7,7 +7,7 @@ $("#create_user").click(function () {
     var cont = 0;
     $.each(childs, function() {
         console.log(`${$(this).text()} - ${cont++}`);
-    });
+    });//
 });
 
 $("#table-select tbody > tr").click(function () {

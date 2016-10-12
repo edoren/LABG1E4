@@ -35,7 +35,12 @@
         </div>
         <button class="btn btn-primary btn-block" type="submit">Iniciar</button>
       </form>
-      <center class="m-t-1"><a href="{% url 'restore_password' %}">Olvidé mi contraseña</a></center>
+      <center class="m-t-1">
+        <a href="{% url 'restore_password' %}">Olvidé mi contraseña</a>
+      </center>
+      <center class="m-t-1">
+        ¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a>
+      </center>
     </div>
   </div>
   </div>

@@ -5,6 +5,15 @@
 
 {% block sidebar-content %}
 <li>
-  <a href="{% url 'home' %}">Gestionar Usuarios</a>
+  <a href="{% url 'manage_institutions' %}">Gestionar Instituciones</a>
+</li>
+<li>
+  <a href="{% url 'manage_groups' %}">Gestionar Grupos</a>
+</li>
+<li>
+  <a href="{% url 'home_admin' %}">Gestionar Usuarios</a>
+</li>
+<li>
+  <a href="{% url 'account_requests' %}">Solicitudes De Usuarios</a>
 </li>
 {% endblock %}

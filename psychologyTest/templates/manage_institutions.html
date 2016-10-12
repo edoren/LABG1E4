@@ -1,6 +1,6 @@
-{% extends "base_psycologist.html"%}
+{% extends "base_admin.html"%}
 
-{% block title %}PTTI - Manejo Instituciones{% endblock %}
+{% block title %}PTTI - Gestión de Instituciones{% endblock %}
 
 {% block page-content %}
 <div class="row">
@@ -11,6 +11,8 @@
 <div class="row p-t-1">
   <div class="col-xs-6 p-l-0">
     <button class="btn btn-primary" id="create_institution_btn" data-toggle="modal" data-target="#create_institution">Crear</button>
+    <button class="btn btn-warning" id="modify_group_btn">Editar</button>
+    <button class="btn btn-danger" id="remove_group_btn">Eliminar</button>
   </div>
   <div class="col-xs-6 p-r-0">
     <form class="form-inline pull-xs-right">
@@ -32,12 +34,11 @@
             <th>Telefono</th>
             <th>Sitio Web</th>
             <th>Status</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
         {% for ins in institucion %}
-          <tr>
+          <tr institutions-id="{{ ins.id }}">
             <td>{{ ins.nit }}</td>
             <td>{{ ins.nombre }}</td>
             <td>{{ ins.direccion }}</td>
@@ -45,14 +46,6 @@
             <td>{{ ins.telefono }}</td>
             <td>{{ ins.sitio_web }}</td>
             <td>{{ ins.estado_activo }}</td>
-            <td>
-              <button class="btn btn-warning" id="modify_user_btn">
-                <span class="glyphicon glyphicon-pencil">Editar</span>
-              </button>
-              <button class="btn btn-danger" id="remove_user_btn">
-                <span class="glyphicon glyphicon-remove">Eliminar</span>
-              </button>
-            </td>
           </tr>
           {% endfor %}
         </tbody>
