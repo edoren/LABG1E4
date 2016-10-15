@@ -2,60 +2,36 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Perfil_usuario, Institucion, Admin, Grupo, Grupo_institucion, Estudiante, Psicologo
+from .models import Institution, Group, User
 
-class ProfileAdmin(admin.ModelAdmin):
 
-    list_display =["tipo_documento","Nro_dodocumento","genero","primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","fecha_nacimiento","direccion","telefono","email","contrasena","rol","estado_activo","creado","modificado"]
+class ProfileAdminUser(admin.ModelAdmin):
+    list_display = ["document_type", "document_number", "gender", "first_name",
+                    "last_name", "birthdate", "address", "phone", "email",
+                    "password", "role", "is_active", "join_date", "last_login"]
+
     class Meta:
-        model = Perfil_usuario
+        model = User
 
-admin.site.register(Perfil_usuario, ProfileAdmin)
+admin.site.register(User, ProfileAdminUser)
+
 
 class ProfileAdminInstutucion(admin.ModelAdmin):
+    list_display = ["nit", "name", "address", "city", "phone",
+                    "website", "is_active", "creation_date", "modified_date"]
 
-    list_display =["nit","nombre","direccion","ciudad","telefono","sitio_web","estado_activo","creado","modificado"]
     class Meta:
-        model = Institucion
+        model = Institution
 
-admin.site.register(Institucion, ProfileAdminInstutucion)
 
-class ProfileAdminAdmin(admin.ModelAdmin):
+admin.site.register(Institution, ProfileAdminInstutucion)
 
-    list_display =["estado_activo","creado","modificado"]
+
+class ProfileAdminGroup(admin.ModelAdmin):
+    list_display = ["name", "grade", "schedule", "institution",
+                    "is_active", "creation_date", "modified_date"]
+
     class Meta:
-        model = Admin
+        model = Group
 
-admin.site.register(Admin, ProfileAdminAdmin)
-
-class ProfileAdminGrupo(admin.ModelAdmin):
-
-    list_display =["nombre","grado","jornada","estado_activo","creado","modificado"]
-    class Meta:
-        model = Grupo
-
-admin.site.register(Grupo, ProfileAdminGrupo)
-
-class ProfileAdminGrupo_institucion(admin.ModelAdmin):
-
-    list_display =["estado_activo","creado","modificado"]
-    class Meta:
-        model = Grupo_institucion
-
-admin.site.register(Grupo_institucion, ProfileAdminGrupo_institucion)
-
-class ProfileAdminEstudiante(admin.ModelAdmin):
-
-    list_display =["estado_activo","creado","modificado"]
-    class Meta:
-        model = Estudiante
-
-admin.site.register(Estudiante, ProfileAdminEstudiante)
-
-class ProfileAdminPsicologo(admin.ModelAdmin):
-
-    list_display =["estado_activo","creado","modificado"]
-    class Meta:
-        model = Psicologo
-
-admin.site.register(Psicologo, ProfileAdminPsicologo)
+admin.site.register(Group, ProfileAdminGroup)

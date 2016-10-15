@@ -2,21 +2,13 @@
 
 {% block title %}Login{% endblock %}
 
-{% block css %}
-<style type="text/css">
-  /*body{
-    background-color: black;
-  }*/
-</style>
-{% endblock %}
-
 {% block body %}
 {% if error %}
 <div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert">
     <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
   </button>
-  <strong>Error:</strong> {{ error }}
+  <div class="font-weight-bold">Error:</div> {{ error }}
 </div>
 {% endif %}
 <div class="row flex-items-xs-middle fill_parent">
@@ -27,7 +19,7 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="inputUsername" class="sr-only">Nombre de usuario</label>
-          <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Nombre de usuario" required autofocus>
+          <input name="email" type="text" id="inputUsername" class="form-control" placeholder="Nombre de usuario" required autofocus>
         </div>
         <div class="form-group">
           <label for="inputPassword" class="sr-only">Contraseña</label>

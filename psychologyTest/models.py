@@ -2,106 +2,79 @@
 from __future__ import unicode_literals
 
 from django.db import models
-#from django.contrib.auth.models import User
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
-class Perfil_usuario(models.Model):
-	CAMBIO_DOCUMENTO = (('TI','Tarjeta de Identidad'), ('CC','Cedula de Ciudadania'), ('CE','Cedula de Extranjería'))
-	CAMBIO_GENERO = (('M','Masculino'),('F','Femenino'),('O','Lgtbi'))
-	CAMBIO_ROL = (('ADMIN','Administrador'),('PSI','Psicólogo'),('EST','Estudiante'))
+from psychologyTest.auth import UserManager
 
-	#usuario = models.OneToOneField(User, verbose_name="Usuario")
-	tipo_documento = models.CharField(max_length=5, choices = CAMBIO_DOCUMENTO, default='CC', verbose_name="Tipo de documento", blank=False)
-	Nro_dodocumento = models.CharField(max_length = 25, verbose_name="Documento", blank=False,null=False)
-	genero = models.CharField(max_length=2, choices = CAMBIO_GENERO, verbose_name="Género", blank=False)
-	primer_nombre = models.CharField(max_length=20, blank=False,null=False)
-	segundo_nombre = models.CharField(max_length=20, blank=True,null=True)
-	primer_apellido = models.CharField(max_length=20, blank=False,null=False)
-	segundo_apellido = models.CharField(max_length=20, blank=True,null=True)
-	fecha_nacimiento = models.DateField(null=False, blank=False)
-	direccion = models.CharField(max_length=30, blank=False,null=False)
-	telefono = models.CharField(max_length=20, blank=False,null=False)
 
-	email = models.EmailField(blank=False,null=False)
-	contrasena = models.CharField(max_length=50)
-	rol = models.CharField(max_length=5, choices = CAMBIO_ROL, default='EST', verbose_name="Rol", blank=False)
+DOCUMENT_OPTIONS = (("TI", "Tarjeta de Identidad"),
+                    ("CC", "Cedula de Ciudadania"),
+                    ("CE", "Cedula de Extranjería"))
+GENDER_OPTIONS = (("M", "Masculino"), ("F", "Femenino"), ("O", "LGBT+"))
+ROLE_OPTIONS = (("A", "Administrador"),
+                ("P", "Psicólogo"), ("S", "Estudiante"))
+SCHEDULE_OPTIONS = (("Morning", "Mañana"), ("Afternoon", "Tarde"),
+                    ("Evening", "Noche"), ("Saturday", "Sabatina"))
 
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
 
-	def __unicode__(self):
-		return u'%s %s' %(self.email , self.primer_nombre)
+class Institution(models.Model):
+    nit = models.CharField(max_length=20)
+    name = models.CharField(max_length=30)
+    address = models.CharField(max_length=30)
+    city = models.CharField(max_length=30)
+    phone = models.CharField(max_length=20)
+    website = models.CharField(max_length=30)
 
-class Institucion(models.Model):
-	nit = models.CharField(max_length = 20, blank=False,null=False)
-	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
-	nombre = models.CharField(max_length=30, blank=False,null=False)
-	direccion = models.CharField(max_length=30, blank=False,null=False)
-	ciudad = models.CharField(max_length=30, blank=False,null=False)
-	telefono = models.CharField(max_length=20, blank=False,null=False)
-	sitio_web = models.CharField(max_length=30, blank=False,null=False)
-
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
-
-	def __unicode__(self):
-		return u'%s %s' %(self.nit , self.nombre)
-
-class Admin(models.Model):
-    usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
-    institucion  = models.ForeignKey(Institucion)
-
-    estado_activo = models.BooleanField(default=False, blank=False)
-    creado = models.DateTimeField(auto_now_add = True)
-    modificado = models.DateTimeField(auto_now = True)
+    is_active = models.BooleanField(default=True, blank=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-		return u'%s %s' %(self.usuario , self.institucion)
+        return u"{} - {}".format(self.nit, self.name)
 
-class Grupo(models.Model):
-	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
-	nombre = models.CharField(max_length=30, blank=False,null=False)
-	grado = models.CharField(max_length=15, blank=False,null=False)
-	jornada = models.CharField(max_length=30, blank=False,null=False)
 
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
+class Group(models.Model):
+    name = models.CharField(max_length=30)
+    grade = models.CharField(max_length=15)
+    schedule = models.CharField(max_length=30, choices=SCHEDULE_OPTIONS)
 
-	def __unicode__(self):
-		return u'%s %s %s' %(self.nombre , self.grado, self.jornada)
+    institution = models.ForeignKey(Institution, null=False, blank=False)
 
-class Grupo_institucion(models.Model):
-	grupo  = models.ForeignKey(Grupo)
-	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
-	institucion  = models.ForeignKey(Institucion)
+    is_active = models.BooleanField(default=True, blank=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
 
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
+    def __unicode__(self):
+        return u"{} {} {}".format(self.name, self.grade, self.schedule)
 
-	def __unicode__(self):
-		return u'%s %s %s' %(self.usuario , self.institucion , self.grupo)
 
-class Estudiante(models.Model):
-	grupo  = models.ForeignKey(Grupo)
-	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
+class User(AbstractBaseUser):
+    document_type = models.CharField(
+        max_length=5, choices=DOCUMENT_OPTIONS, default="CC")
+    document_number = models.CharField(max_length=30)
 
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
+    email = models.EmailField(unique=True)
 
-	def __unicode__(self):
-		return u'%s %s' %(self.usuario , self.grupo)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
 
-class Psicologo(models.Model):
-	grupo  = models.ForeignKey(Grupo)
-	usuario = models.ForeignKey(Perfil_usuario, verbose_name="Usuario")
+    birthdate = models.DateField(null=False, blank=False)
+    gender = models.CharField(max_length=2, choices=GENDER_OPTIONS)
+    address = models.CharField(max_length=100)
+    phone = models.CharField(max_length=30)
 
-	estado_activo = models.BooleanField(default=False, blank=False)
-	creado = models.DateTimeField(auto_now_add = True)
-	modificado = models.DateTimeField(auto_now = True)
+    role = models.CharField(max_length=1, choices=ROLE_OPTIONS,
+                            null=False, blank=False)
+    group = models.ForeignKey(Group, null=True, blank=True)
 
-	def __unicode__(self):
-		return u'%s %s' %(self.usuario , self.grupo)
+    is_active = models.BooleanField(default=False, blank=False)
+    join_date = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now_add=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELD = [USERNAME_FIELD, "password"]
+
+    def __unicode__(self):
+        return u"{} {}".format(self.first_name, self.last_name)

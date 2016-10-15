@@ -2,120 +2,227 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, render_to_response
 from django.template import RequestContext
 
-from psychologyTest.forms import (addAdminForms, addEstudianteForms,
-                                  addGrupo_institucionFomrs, addGrupoForms,
-                                  addInstitucionForms, addPerfil_usuarioForms,
-                                  addPsicologoForms)
-from psychologyTest.models import (Admin, Estudiante, Grupo, Grupo_institucion,
-                                   Institucion, Perfil_usuario, Psicologo)
-
-from .forms import addPerfil_usuarioForms
+from psychologyTest.forms import AddGroupForm, AddInstitutionForm, AddUserForm
+from psychologyTest.models import Group, Institution, User
+from psychologyTest.private.email import EMAIL_HOST_USER
+from psychologyTest.util import RedirectToHome
 
 
 def login_page(request):
-    print "login_page"
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse("home_student"))
-
     data = {}
-    if request.POST:
-        username = request.POST.get("username")
+
+    if request.user.is_authenticated():
+        if not isinstance(request.user, User):
+            data["error"] = "No tiene una interfaz asignada."
+            return render(request, "login.html", data)
+        return RedirectToHome(request.user)
+
+    if request.method == "POST":
+        username = request.POST.get("email")
         password = request.POST.get("password")
-        print username, password
+
         user = authenticate(username=username, password=password)
-        print user
-        if user is not None:
-            if user.is_active:
-                print(login(request, user))
-                data["success"] = "login correcto"
-                print "success", data
-                return HttpResponseRedirect(reverse("home_student"))
-            else:
-                data["error"] = "el usuario no esta activo"
-                print "error", data
+
+        if user is None:
+            data["error"] = "Nombre de usuario o contraseña incorrectos."
+            return render(request, "login.html", data)
+
+        if not isinstance(user, User):
+            data["error"] = "No tiene permitido acceder por esta interfaz."
+            return render(request, "login.html", data)
+
+        if user.is_active:
+            login(request, user)
+            data["success"] = "Login correcto"
+            return RedirectToHome(user)
         else:
-            data["error"] = "Nombre de usuario o contraseña incorrectos"
-            print "error", data
+            data["error"] = "El usuario no esta activo o fué eliminado."
+
     return render(request, "login.html", data)
 
 
 def register(request):
-    return render(request, "register.html", {})  # arreglar
+    return render(request, "register.html", {})
 
 
 def restore_password(request):
-    return render(request, "restore_password.html", {})
+    if request.POST:
+        from_email = EMAIL_HOST_USER
+        to_email = request.POST.get("email")
+        try:
+            user = User.objects.get(email=to_email)
+        except User.DoesNotExist:
+            user = None
+        if user is not None:
+            password = user.password
+            subject = "Alguien solicito reestablecer la contrasena para tu cuenta en PTTI"
+            message = "Hola, alguien solicito recientemente que se restablezca tu contrasena de PTTI. Esta es tu contrasena: {}".format(password)
+            mail = EmailMessage(subject, message, from_email, [to_email])
+            mail.send()
+        return HttpResponseRedirect(reverse("login_page"))
+    else:
+        return render(request, "restore_password.html", {})
 
 
 @login_required(login_url="/")
 def logout_page(request):
-    print "logout"
     logout(request)
     return HttpResponseRedirect(reverse("login_page"))
 
 
 @login_required(login_url="/")
 def home_admin(request):
-    perfil_usuario = Perfil_usuario.objects.filter(estado_activo=True)
+    if not isinstance(request.user, User) or request.user.role != "A":
+        return RedirectToHome(request.user)
 
-    if request.POST:
-        print "es un post"
-        form = addPerfil_usuarioForms(request.POST)
-        if form.is_valid():
-            form.save()
-            print "Si es valido"
+    user_profile = User.objects.filter(is_active=True)
+    groups = Group.objects.filter(is_active=True)
 
-            # return HttpResponseRedirect("/duenos")
-        else:
-            print "no es valido"
-            print form.errors
-    elif request.GET:
-        id_obj = request.GET.get("id")
-        obj = Perfil_usuario.objects.get(pk=id_obj)
-        print obj
-    # else:
-    #     form = addPerfil_usuarioForms()
+    if request.method == "POST":
+        action = request.POST.get("action")
+        print action
+        if action == "create":
+            form = AddUserForm(request.POST)
+            if form.is_valid():
+                usuario = form.save(commit=False)
+                usuario.is_active = True
+                usuario.save()
+            else:
+                print form.errors
+                print "NOT VALID User!!"
+        elif action == "modify":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                user = User.objects.get(pk=id_obj)
+                form = AddUserForm(request.POST, instance=user)
+                if form.is_valid():
+                    usuario = form.save(commit=False)
+                    usuario.is_active = True
+                    usuario.save()
+                else:
+                    print form.errors
+                    print "NOT VALID User!!"
+        elif action == "remove":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                obj = User.objects.get(pk=id_obj)
+                obj.is_active = False
+                obj.save()
 
     return render(request, "home_admin.html",
-                  {"perfil_usuario": perfil_usuario})
+                  {"user_profile": user_profile, "groups": groups})
 
 
 @login_required(login_url="/")
-def home_psycologist(request):
-    return render(request, "home_psycologist.html",  {})
+def home_psychologist(request):
+    if not isinstance(request.user, User) or request.user.role != "P":
+        return RedirectToHome(request.user)
+
+    return render(request, "home_psychologist.html",  {})
 
 
 @login_required(login_url="/")
 def home_student(request):
+    if not isinstance(request.user, User) or request.user.role != "S":
+        return RedirectToHome(request.user)
+
     return render(request, "home_student.html",  {})
-
-
-# # @login_required(login_url="/")
-# # def manage_users(request):
-#     return render(request, "manage_users.html", {})
 
 
 @login_required(login_url="/")
 def account_requests(request):
+    if not isinstance(request.user, User) or request.user.role != "A":
+        return RedirectToHome(request.user)
+
     return render(request, "account_requests.html", {})
 
 
 @login_required(login_url="/")
 def manage_groups(request):
-    grupo = Grupo.objects.all()
-    return render(request, "manage_groups.html", {"grupo": grupo})
+    if not isinstance(request.user, User) or request.user.role != "A":
+        return RedirectToHome(request.user)
+
+    groups = Group.objects.filter(is_active=True)
+    institutions = Institution.objects.filter(is_active=True)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "create":
+            form = AddGroupForm(request.POST)
+            if form.is_valid():
+                gr = form.save(commit=False)
+                gr.is_active = True
+                gr.save()
+            else:
+                print form.errors
+        elif action == "modify":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                user = Group.objects.get(pk=id_obj)
+                form = AddGroupForm(request.POST, instance=user)
+                if form.is_valid():
+                    gr = form.save(commit=False)
+                    gr.is_active = True
+                    gr.save()
+                else:
+                    print form.errors
+        elif action == "remove":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                obj = Group.objects.get(pk=id_obj)
+                obj.is_active = False
+                obj.save()
+
+    return render(request, "manage_groups.html", {
+        "groups": groups,
+        "institutions": institutions
+    })
 
 
 @login_required(login_url="/")
 def manage_institutions(request):
-    institucion = Institucion.objects.all()
-    return render(request, "manage_institutions.html",
-                  {"institucion": institucion})
+    if not isinstance(request.user, User) or request.user.role != "A":
+        return RedirectToHome(request.user)
+
+    institutions = Institution.objects.filter(is_active=True)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "create":
+            form = AddInstitutionForm(request.POST)
+            if form.is_valid():
+                inst = form.save(commit=False)
+                inst.is_active = True
+                inst.save()
+            else:
+                print form.errors
+        elif action == "modify":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                obj = Institution.objects.get(pk=id_obj)
+                form = AddInstitutionForm(request.POST, instance=obj)
+                if form.is_valid():
+                    inst = form.save(commit=False)
+                    inst.is_active = True
+                    inst.save()
+                else:
+                    print form.errors
+        elif action == "remove":
+            id_obj = request.POST.get("id")
+            if id_obj is not None:
+                obj = Institution.objects.get(pk=id_obj)
+                obj.is_active = False
+                obj.save()
+
+    return render(request, "manage_institutions.html", {
+        "institutions": institutions
+    })
 
 
 @login_required(login_url="/")
@@ -124,7 +231,7 @@ def edit_student_profile(request):
 
 # @login_required
 # def add_dueno(request):
-#     if request.POST:
+#     if request.method == "POST":
 #         form = UsuarioForm(request.POST)
 #         if  form.is_valid():
 #             usuario = form.save(commit=False)
@@ -148,7 +255,7 @@ def edit_student_profile(request):
 #     else:
 #         return HttpResponseForbidden()
 
-#     if request.POST:
+#     if request.method == "POST":
 #         form = UsuarioForm(request.POST, instance=usuario)
 #         if form.is_valid():
 #             usuario.set_password(request.POST["password"])

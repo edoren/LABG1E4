@@ -10,9 +10,9 @@
 </div>
 <div class="row p-t-1">
   <div class="col-xs-4 p-l-0">
-    <button class="btn btn-primary" id="create_user_btn" data-toggle="modal" data-target="#create_user">Crear</button>
-    <button class="btn btn-warning" id="modify_user_btn">Editar</button>
-    <button class="btn btn-danger" id="remove_user_btn">Eliminar</button>
+    <button id="create-btn" class="btn btn-primary manage-users"  data-toggle="modal" data-target="#user-form">Crear</button>
+    <button id="modify-btn" class="btn btn-warning manage-users" data-toggle="modal" data-target="#user-form">Editar</button>
+    <button id="remove-btn" class="btn btn-danger manage-users" data-toggle="modal" data-target="#confirm">Eliminar</button>
   </div>
   <div class="col-xs-4 p-x-0">
     <button class="btn btn-success" type="submit">Importar Excel</button>
@@ -32,28 +32,35 @@
         <thead>
           <tr>
             <th>CC</th>
-            <th>Primer Nombre</th>
-            <th>Segundo Nombre</th>
-            <th>Primer Apellido</th>
-            <th>Segundo Apellido</th>
+            <th>Nombres</th>
+            <th>Apellido</th>
             <th>Email</th>
-            <!--<th>Contraseña</th>-->
             <th>Status</th>
             <th>Rol</th>
           </tr>
         </thead>
         <tbody>
-        {% for pu in perfil_usuario %}
-          <tr user-id="{{ pu.id }}">
-            <td>{{ pu.Nro_dodocumento }}</td>
-            <td>{{ pu.primer_nombre }}</td>
-            <td>{{ pu.segundo_nombre }}</td>
-            <td>{{ pu.primer_apellido }}</td>
-            <td>{{ pu.segundo_apellido }}</td>
-            <td>{{ pu.email }}</td>
-            <!--<td>{{ pu.contrasena }}</td>-->
-            <td>{{ pu.estado_activo }}</td>
-            <td>{{ pu.rol }}</td>
+        {% for usr in user_profile %}
+          <tr data-pk="{{ usr.id }}"
+              data-type-doc="{{ usr.document_type }}"
+              data-no-doc="{{ usr.document_number }}"
+              data-gender="{{ usr.gender }}"
+              data-first-name="{{ usr.first_name }}"
+              data-last-name="{{ usr.last_name }}"
+              data-born-date="{{ usr.birthdate|date:'d/m/Y' }}"
+              data-born-date-alt="{{ usr.birthdate|date:'Y-m-d' }}"
+              data-address="{{ usr.address }}"
+              data-phone="{{ usr.phone }}"
+              data-email="{{ usr.email }}"
+              data-password="{{ usr.password }}"
+              data-role="{{ usr.role }}"
+              data-group="{{ usr.group.pk }}">
+            <td>{{ usr.document_number }}</td>
+            <td>{{ usr.first_name }} {{ usr.segundo_nombre }}</td>
+            <td>{{ usr.last_name }} {{ usr.segundo_apellido }}</td>
+            <td>{{ usr.email }}</td>
+            <td>{{ usr.is_active }}</td>
+            <td>{{ usr.role }}</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -61,25 +68,28 @@
     </div>
   </div>
 </div>
-<div id="create_user" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+
+<div id="user-form" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" >
     <div class="modal-content">
       <div class="row m-a-0">
         <form class="col-xs p-a-3" method="POST">
           {% csrf_token %}
+          {{ form.group }}
           <div class="form-group row flex-items-md-middle">
             <label for="role-input" class="col-md-3 col-form-label">Rol</label>
             <div class="col-md-9">
-              <select name="genero" class="custom-select w-100">
+              <select name="role" id="formd-role" class="custom-select w-100">
+                <option value="A">Administrador</option>
                 <option value="P" selected>Psicólogo</option>
-                <option value="E">Estudiante</option>
+                <option value="S">Estudiante</option>
               </select>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="id-type-input" class="col-md-3 col-form-label">Tipo de identificación</label>
+            <label for="formd-type-doc" class="col-md-3 col-form-label">Tipo de identificación</label>
             <div class="col-md-9">
-              <select name="tipo_documento" class="custom-select w-100">
+              <select name="document_type" id="formd-type-doc" class="custom-select w-100">
                 <option value="TI">Tarjeta de Identidad</option>
                 <option value="CC" selected>Cédula de Ciudadanía</option>
                 <option value="CE">Cédula de Extranjería</option>
@@ -87,78 +97,124 @@
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="id-number-input" class="col-md-3 col-form-label">Número de identificación</label>
+            <label for="formd-no-doc" class="col-md-3 col-form-label">Número de identificación</label>
             <div class="col-md-9">
-              <input name="Nro_dodocumento" type="text" id="input_no_documento" class="form-control" placeholder="Número Documento" required>
+              <input name="document_number" type="text" id="formd-no-doc" class="form-control" placeholder="Número Documento" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="name-input" class="col-md-3 col-form-label">Nombres</label>
+            <label class="col-md-3 col-form-label">Nombres</label>
             <div class="col-md-9">
-              <input name="primer_nombre" type="text" id="input_nombre" class="form-control" placeholder="Primero" required>
-              <input name="segundo_nombre" type="text" id="input_nombre" class="form-control" placeholder="Segundo">
+              <input name="first_name" type="text" id="formd-first-name" class="form-control" placeholder="Nombres" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
             <label for="lastname-input" class="col-md-3 col-form-label">Apellidos</label>
             <div class="col-md-9">
-              <input name="primer_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Primero" required>
-              <input name="segundo_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Segundo">
+              <input name="last_name" type="text" id="formd-first-surname" class="form-control w-50" placeholder="Apellidos" required>
+            </div>
+          </div>
+          <div class="form-group row flex-items-md-middle">
+            <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
+            <div class="col-md-9">
+              <input id="formd-born-date" type="date" class="form-control" placeholder="DD/MM/YY" required>
+            </div>
+          </div>
+          <input name="birthdate" id="formd-born-date-alt" hidden>
+          <div class="form-group row flex-items-md-middle">
+            <label for="formd-gender" class="col-md-3 col-form-label">Genero</label>
+            <div class="col-md-9">
+              <select name="gender" id="formd-gender" class="custom-select w-100">
+                <option value="M">Masculino</option>
+                <option value="F" selected>Femenino</option>
+                <option value="O">Other</option>
+              </select>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
             <label for="address-input" class="col-md-3 col-form-label">Dirección</label>
             <div class="col-md-9">
-              <input name="direccion" type="text" class="form-control" placeholder="Dirección" required>
+              <input name="address" id="formd-address" type="text" class="form-control" placeholder="Dirección" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
             <label for="phone-input" class="col-md-3 col-form-label">Teléfono</label>
             <div class="col-md-9">
-              <input name="telefono" type="tel" class="form-control" placeholder="Teléfono" required>
+              <input name="phone" id="formd-phone" type="tel" class="form-control" placeholder="Teléfono" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
             <label for="email-input" class="col-md-3 col-form-label">Email</label>
             <div class="col-md-9">
-              <input name="email" type="email" class="form-control" placeholder="Email" required>
+              <input name="email" id="formd-email" type="email" class="form-control" placeholder="Email" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="password-input" class="col-md-3 col-form-label">Contraseña</label>
+            <label for="formd-password" class="col-md-3 col-form-label">Contraseña</label>
             <div class="col-md-9">
-              <input name="contrasena" type="password" class="form-control" placeholder="Contraseña" required>
+              <input name="password" id="formd-password" type="password" class="form-control" placeholder="Contraseña" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="password-repeat-input" class="col-md-3 col-form-label">Repetir Contraseña</label>
+            <label for="formd-password-repeat" class="col-md-3 col-form-label">Repetir Contraseña</label>
             <div class="col-md-9">
-              <input name="repetir_contrasena" type="password" class="form-control" placeholder="Repetir Contraseña" required>
+              <input id="formd-password-repeat" name="repetir_password" type="password" class="form-control" placeholder="Repetir Contraseña" required>
             </div>
           </div>
           <div class="form-group row flex-items-md-middle">
-            <label for="group-input" class="col-md-3 col-form-label">Grupo</label>
+            <label for="formd-group" class="col-md-3 col-form-label">Grupo</label>
             <div class="col-md-9">
-              <input name="grupo" type="text" class="form-control" placeholder="Grupo" required>
+              <select name="group" id="formd-group" class="custom-select w-100">
+                {% for gr in groups %}
+                  <option value="{{ gr.id }}">{{ gr.name }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
-          <div class="form-group row flex-items-md-middle">
-            <label for="institucion-input" class="col-md-3 col-form-label">Institución</label>
-            <div class="col-md-9">
-              <input name="grupo" type="text" class="form-control" placeholder="Institución" required>
-            </div>
+          <div id="form-alert" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
+            <button type="button" id="dismiss-alert">
+              <i class="material-icons md-16">close</i>
+            </button>
+            <div id="error-text" class="font-weight-bold"></div>
           </div>
           <div class="form-group row flex-items-md-middle m-b-0">
             <div class="col-md-12 p-t-1">
               <center>
-                <button class="btn btn-lg btn-primary m-r-1" data-dismiss="modal">Cancelar</button>
-                <button class="btn btn-lg btn-primary m-l-1" type="submit">Agregar</button>
+                <button class="btn btn-lg btn-primary m-r-1" type="button" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-lg btn-primary m-l-1 submit-button" type="submit">Submit</button>
               </center>
             </div>
           </div>
+          <input id="formd-action" name="action" hidden>
+          <input id="formd-id" name="id" hidden>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<div id="confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="row m-a-0">
+        <div class="col-xs text-xs-center p-a-2">
+          <p>Está seguro que desea eliminar este registro de la base de datos</p>
+          <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary remove">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(function() {
+    $("#formd-born-date").datepicker({
+        showAnim: "slideDown",
+        dateFormat: "dd/mm/yy",
+        altFormat: "yy-mm-dd",
+        altField: "#formd-born-date-alt"
+    });
+});
+</script>
 {% endblock %}

@@ -91,6 +91,9 @@ ENV/
 # Node
 node_modules/
 
+# Ignore SQLite3 Database
+db.sqlite3
+
 # TypeScript typings
 typings/
 
@@ -99,3 +102,6 @@ psychologyTest/static/js
 
 # Python virtualenv folder
 enviroment/
+
+# Private files
+psychologyTest/private
