@@ -7,7 +7,7 @@ from psychologyTest.models import User
 def RedirectToHome(user):
     rol_homes = {
         "A": "home_admin",
-        "P": "home_psicologist",
+        "P": "home_psychologist",
         "S": "home_student"
     }
     view = rol_homes.get(user.role, None)
