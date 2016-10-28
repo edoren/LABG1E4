@@ -1,4 +1,4 @@
-{% extends "base_admin.html"%}
+{% extends "base_admin.html" %}
 
 {% block title %}PTTI - Inicio{% endblock %}
 
@@ -60,7 +60,7 @@
             <td>{{ usr.last_name }} {{ usr.segundo_apellido }}</td>
             <td>{{ usr.email }}</td>
             <td>{{ usr.is_active }}</td>
-            <td>{{ usr.role }}</td>
+            <td>{{ usr.get_role_display }}</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -75,12 +75,10 @@
       <div class="row m-a-0">
         <form class="col-xs p-a-3" method="POST">
           {% csrf_token %}
-          {{ form.group }}
           <div class="form-group row flex-items-md-middle">
             <label for="role-input" class="col-md-3 col-form-label">Rol</label>
             <div class="col-md-9">
               <select name="role" id="formd-role" class="custom-select w-100">
-                <option value="A">Administrador</option>
                 <option value="P" selected>Psicólogo</option>
                 <option value="S">Estudiante</option>
               </select>
@@ -159,16 +157,6 @@
             <label for="formd-password-repeat" class="col-md-3 col-form-label">Repetir Contraseña</label>
             <div class="col-md-9">
               <input id="formd-password-repeat" name="repetir_password" type="password" class="form-control" placeholder="Repetir Contraseña" required>
-            </div>
-          </div>
-          <div class="form-group row flex-items-md-middle">
-            <label for="formd-group" class="col-md-3 col-form-label">Grupo</label>
-            <div class="col-md-9">
-              <select name="group" id="formd-group" class="custom-select w-100">
-                {% for gr in groups %}
-                  <option value="{{ gr.id }}">{{ gr.name }}</option>
-                {% endfor %}
-              </select>
             </div>
           </div>
           <div id="form-alert" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">

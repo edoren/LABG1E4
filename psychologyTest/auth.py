@@ -20,10 +20,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("role", "S")
         return self._create_user(email, password, **extra_fields)
 
-    # def create_superuser(self, email, password, **extra_fields):
-    #     extra_fields.setdefault("role", "R")
-
-    #     if extra_fields.get("role") != "R":
-    #         raise ValueError("Superuser must have role=R.")
-
-    #     return self._create_user(email, password, **extra_fields)
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault("role", "R")
+        extra_fields.setdefault("is_active", True)
+        return self._create_user(email, password, **extra_fields)

@@ -1,4 +1,4 @@
-{% extends "base_admin.html"%}
+{% extends "base_admin.html" %}
 
 {% block title %}PTTI - Gestión de Grupos{% endblock %}
 
@@ -44,8 +44,8 @@
             <td>{{ gr.name }}</td>
             <td>{{ gr.institution.name }}</td>
             <td>{{ gr.grade }}</td>
-            <td>{{ gr.schedule }}</td>
-            <td>{{ gr.is_active }}</td>
+            <td>{{ gr.get_schedule_display }}</td>
+            <td>{{ gr.is_active|yesno:"Activo,Inactivo" }}</td>
           </tr>
           {% endfor %}
         </tbody>

@@ -1,4 +1,4 @@
-{% extends "base_admin.html"%}
+{% extends "base_admin.html" %}
 
 {% block title %}PTTI - Inicio{% endblock %}
 
@@ -11,7 +11,7 @@
 <div class="row p-t-1">
   <div class="col-xs-12 p-a-0">
     <div class="table-responsive table-hover">
-      <table id="table-select" class="table">
+      <table class="table">
         <thead>
           <tr>
             <th>CC</th>
@@ -22,7 +22,7 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <!--<tbody>
           <tr>
             <td>-</td>
             <td>-</td>
@@ -34,9 +34,9 @@
               <button class="btn btn-danger" type="submit">Rechazar</button>
             </td>
           </tr>
-        </tbody>
+        </tbody>-->
         <tbody>
-        {% for pu in perfil_usuario %}
+        {% for pu in user_profile %}
           <tr user-id="{{ pu.id }}">
             <td>{{ pu.document_number }}</td>
             <td>{{ pu.first_name }}</td>

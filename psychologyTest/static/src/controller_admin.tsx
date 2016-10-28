@@ -78,7 +78,7 @@ $("form").on("submit", function() {
         $("#error-text").text("Las contraseñas no son iguales.");
         return false;
     }
-    window.location.replace(window.location.href);
+    // window.location.replace(window.location.href);
     return true;
 });
 

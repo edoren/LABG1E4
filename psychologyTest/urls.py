@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views
+from psychologyTest import views
 
 urlpatterns = [
     url(r"^$", views.login_page, name="login_page"),
@@ -14,6 +14,6 @@ urlpatterns = [
     url(r"^manage_groups", views.manage_groups, name="manage_groups"),
     url(r"^manage_institutions", views.manage_institutions,
         name="manage_institutions"),
-    url(r"^edit_student_profile", views.edit_student_profile,
-        name="edit_student_profile"),
+    url(r"^edit_profile", views.edit_profile,
+        name="edit_profile"),
 ]

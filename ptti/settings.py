@@ -15,22 +15,22 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-SECRET_KEY = ""
+SECRET_KEY = "l8loa11iiudam4o$n)vmd=tt=huo9_*!^m&xyu6@_x*yyw8p^^"
 DEBUG = True
+ALLOWED_HOSTS = ["localhost"]
 
 try:
-    import psychologyTest.private.database as database
-    SECRET_KEY = database.SECRET_KEY
-    DEBUG = database.DEBUG
+    import psychologyTest.private.server as server
+    SECRET_KEY = server.SECRET_KEY
+    DEBUG = server.DEBUG
+    ALLOWED_HOSTS = server.ALLOWED_HOSTS
 except:
-    from django.utils.crypto import get_random_string
-    SECRET_KEY = get_random_string(50, "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)")
+    print "Could not load private files. Using debug settings"
+    pass
 
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -115,13 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -131,10 +127,11 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 # Default model to authenticate the platform
-# AUTH_USER_MODEL = "psychologyTest.User"
+
+AUTH_USER_MODEL = "psychologyTest.User"
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
+    # "django.contrib.auth.backends.ModelBackend",
     "psychologyTest.backends.UserBackend"
 ]
 

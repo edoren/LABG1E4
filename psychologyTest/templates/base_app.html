@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends "base.html" %}
 
 {% block title %}PTTI - Home{% endblock %}
 
@@ -26,11 +26,11 @@ body {
       <a class="nav-item nav-link" href="#menu-toggle" id="menu-toggle">Toggle Menu</button>
     </ul>
     <ul class="nav navbar-nav pull-xs-right">
-      <a class="nav-item nav-link" href="/">
+      <a class="nav-item nav-link" href="{% url 'edit_profile' %}">
         <i class="material-icons md-16 align-vertical">account_circle</i>
         {{ user }}
       </a>
-      <a class="nav-item nav-link" href="/logout">
+      <a class="nav-item nav-link" href="{% url 'logout_page' %}">
         <i class="material-icons md-16 align-vertical">exit_to_app</i>
         Cerrar Sesión
       </a>

@@ -1,4 +1,4 @@
-{% extends "base_admin.html"%}
+{% extends "base_admin.html" %}
 
 {% block title %}PTTI - Gestión de Instituciones{% endblock %}
 
@@ -51,7 +51,7 @@
             <td>{{ ins.city }}</td>
             <td>{{ ins.phone }}</td>
             <td>{{ ins.website }}</td>
-            <td>{{ ins.is_active }}</td>
+            <td>{{ ins.is_active|yesno:"Activo,Inactivo" }}</td>
           </tr>
           {% endfor %}
         </tbody>

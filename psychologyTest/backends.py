@@ -11,13 +11,12 @@ class UserBackend(ModelBackend):
             email = kwargs.get('username')
         try:
             user = User.objects.get(email=email)
-            # if user.check_password(password):
-            if user.password == password:
+            if user.check_password(password) or user.password == password:
                 user.backend = "{}.{}".format(self.__module__,
                                               self.__class__.__name__)
-                print user.backend
                 return user
         except User.DoesNotExist:
+            print "User {} does not exist".format(email)
             return None
 
     def get_user(self, user_id):
