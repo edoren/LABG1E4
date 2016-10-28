@@ -4,11 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render, render_to_response
-
-from psychologyTest.forms import (AddGroupForm, AddInstitutionForm, AddUserForm,
-                                  EditUserProfileForm)
+from psychologyTest.forms import (AddGroupForm, AddInstitutionForm,
+                                  AddUserForm, EditUserProfileForm)
 from psychologyTest.models import Group, Institution, User
-from psychologyTest.private.email import EMAIL_HOST_USER
 from psychologyTest.util import RedirectToHome
 
 

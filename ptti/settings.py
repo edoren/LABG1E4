@@ -20,16 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = "l8loa11iiudam4o$n)vmd=tt=huo9_*!^m&xyu6@_x*yyw8p^^"
 DEBUG = True
-ALLOWED_HOSTS = ["localhost"]
-
-try:
-    import psychologyTest.private.server as server
-    SECRET_KEY = server.SECRET_KEY
-    DEBUG = server.DEBUG
-    ALLOWED_HOSTS = server.ALLOWED_HOSTS
-except:
-    print "Could not load private files. Using debug settings"
-    pass
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -78,19 +69,13 @@ WSGI_APPLICATION = "ptti.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {}
 
-try:
-    import psychologyTest.private.database as database
-    DATABASES = database.DATABASES
-except:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
-
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -135,14 +120,8 @@ AUTHENTICATION_BACKENDS = [
     "psychologyTest.backends.UserBackend"
 ]
 
-# Mail settings
-
+# Load private settings if exist
 try:
-    import psychologyTest.private.email as email
-    EMAIL_HOST = email.EMAIL_HOST
-    EMAIL_HOST_USER = email.EMAIL_HOST_USER
-    EMAIL_HOST_PASSWORD = email.EMAIL_HOST_PASSWORD
-    EMAIL_PORT = email.EMAIL_PORT
-    EMAIL_USE_TLS = email.EMAIL_USE_TLS
+    from .private_settings import *
 except:
-    print("Error loading email cofiguration.")
+    pass

@@ -104,4 +104,4 @@ psychologyTest/static/js
 enviroment/
 
 # Private files
-psychologyTest/private
+ptti/private_*.py
