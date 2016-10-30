@@ -60,7 +60,8 @@ class User(AbstractBaseUser):
         return self.role == "R"
 
     def __str__(self):
-        return u"{} {}".format(self.first_name, self.last_name)
+        return u"{} {} [{}]".format(self.first_name, self.last_name,
+                                    self.email)
 
     __unicode__ = __str__
 

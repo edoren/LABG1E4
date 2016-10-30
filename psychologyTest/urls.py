@@ -14,6 +14,7 @@ urlpatterns = [
     url(r"^manage_groups", views.manage_groups, name="manage_groups"),
     url(r"^manage_institutions", views.manage_institutions,
         name="manage_institutions"),
+    url(r"^assign_groups", views.assign_groups, name="assign_groups"),
     url(r"^edit_profile", views.edit_profile,
         name="edit_profile"),
 ]

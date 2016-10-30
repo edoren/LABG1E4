@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.shortcuts import redirect, render, render_to_response
 from psychologyTest.forms import (AddGroupForm, AddInstitutionForm,
                                   AddUserForm, EditUserProfileForm)
@@ -77,7 +78,6 @@ def home_admin(request):
 
     if request.method == "POST":
         action = request.POST.get("action")
-        print action
         if action == "create":
             form = AddUserForm(request.POST, initial={"is_active": True})
             if form.is_valid():
@@ -212,6 +212,42 @@ def manage_institutions(request):
 
     return render(request, "manage_institutions.html", {
         "institutions": institutions
+    })
+
+
+@login_required(login_url="/")
+def assign_groups(request):
+    if request.user.role != "A":
+        return RedirectToHome(request.user)
+
+    groups = Group.objects.filter(is_active=True)
+    psychologists = User.objects.filter(role="P")
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "add":
+            try:
+                group_id = int(request.POST.get("group"))
+                psychologist_id = int(request.POST.get("psychologist"))
+                group = Group.objects.get(pk=group_id)
+                psychologist = User.objects.get(pk=psychologist_id)
+                group.psychologist = psychologist
+                group.save()
+            except:
+                print "Error error can not assign group"
+        if action == "remove":
+            try:
+                group_id = int(request.POST.get("group"))
+                group = Group.objects.get(pk=group_id)
+                group.psychologist = None
+                group.save()
+            except:
+                print "Error error can not remove psychologist from group"
+
+    return render(request, "assign_groups.html", {
+        "asigned_groups": groups.filter(~Q(psychologist=None)),
+        "not_asigned_groups": groups.filter(Q(psychologist=None)),
+        "psychologists": psychologists
     })
 
 

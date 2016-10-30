@@ -1,0 +1,71 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Asignacion De Grupos{% endblock %}
+
+{% block page-content %}
+<div class="row">
+  <div class="col-xs-12 p-l-0">
+    <h2>Asignar Grupos</h2>
+  </div>
+</div>
+<div class="row p-t-1">
+  <div class="col-xs-12 p-l-0 p-r-0">
+    <form class="form-inline" method="POST">
+      {% csrf_token %}
+      <label for="psychologist-select" class="col-form-label">Psicólogo</label>
+      <select name="psychologist"  id="psychologist-select" class="custom-select m-r-1">
+        <option value="None" selected>---------</option>
+      {% for psy in psychologists %}
+        <option value="{{ psy.id }}">{{ psy.first_name }}</option>
+      {% endfor %}
+      </select>
+      <label for="group-select" class="col-form-label">Grupo</label>
+      <select name="group" id="group-select" class="custom-select m-r-1">
+        <option value="None" selected>---------</option>
+      {% for gr in not_asigned_groups %}
+        <option value="{{ gr.id }}">{{ gr.name }}</option>
+      {% endfor %}
+      </select>
+      <button class="btn btn-success" type="submit">Asignar</button>
+      <input name="action" value="add" hidden>
+    </form>
+  </div>
+</div>
+<div class="row p-t-1">
+  <div class="col-xs-12 p-a-0">
+    <div class="table-responsive">
+      <table id="table-select" class="table">
+        <thead>
+          <tr>
+            <th>Grupo</th>
+            <th>Institución</th>
+            <th>Grado</th>
+            <th>Jornada</th>
+            <th>Psicólogo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for gr in asigned_groups %}
+          <tr  data-pk="{{ gr.id }}">
+            <td>{{ gr.name }}</td>
+            <td>{{ gr.institution }}</td>
+            <td>{{ gr.grade }}</td>
+            <td>{{ gr.schedule }}</td>
+            <td>{{ gr.psychologist }}</td>
+            <td>
+              <form class="form-inline" method="POST">
+                {% csrf_token %}
+                <input name="action" value="remove" hidden>
+                <input name="group" value="{{ gr.id }}" hidden>
+                <button class="btn btn-danger" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

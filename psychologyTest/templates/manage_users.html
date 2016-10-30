@@ -163,9 +163,10 @@
             <label for="formd-group" class="col-md-3 col-form-label">Grupo</label>
             <div class="col-md-9">
               <select name="group" id="formd-group" class="custom-select w-100">
-                {% for gr in groups %}
-                  <option value="{{ gr.id }}">{{ gr.name }}</option>
-                {% endfor %}
+                <option value="None" selected>---------</option>
+              {% for gr in groups %}
+                <option value="{{ gr.id }}">{{ gr.name }}</option>
+              {% endfor %}
               </select>
             </div>
           </div>

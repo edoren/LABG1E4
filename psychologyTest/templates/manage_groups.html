@@ -70,9 +70,10 @@
             <label for="formd-institution" class="col-md-3 col-form-label">Institución</label>
             <div class="col-md-9">
               <select name="institution" id="formd-institution" class="custom-select w-100">
-                {% for inst in institutions %}
-                  <option value="{{ inst.id }}">{{ inst.name }}</option>
-                {% endfor %}
+                <option value="None" selected>---------</option>
+              {% for inst in institutions %}
+                <option value="{{ inst.id }}">{{ inst.name }}</option>
+              {% endfor %}
               </select>
             </div>
           </div>
