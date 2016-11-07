@@ -13,5 +13,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-export var csrftoken = getCookie("csrftoken");

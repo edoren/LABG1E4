@@ -13,3 +13,10 @@ def RedirectToHome(user):
     }
     view = rol_homes.get(user.role, None)
     return redirect(view)
+
+
+def try_cast_int(val, fail=None):
+    try:
+        return int(val)
+    except ValueError:
+        return fail

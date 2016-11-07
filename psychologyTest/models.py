@@ -103,34 +103,54 @@ class Group(models.Model):
     __unicode__ = __str__
 
 
+class StudentGroup(models.Model):
+    student = models.ForeignKey(User, null=False, blank=False)
+    group = models.ForeignKey(Group, null=False, blank=False)
+
+    class Meta:
+        unique_together = ("student", "group")
+
+
 class TestKolb(models.Model):
-    name = models.CharField(max_length=100)
-    student = models.ForeignKey(User)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=500)
+    psychologist = models.ForeignKey(User, null=False, blank=False)
+
+    def __str__(self):
+        return u"{}".format(self.name)
+
+    __unicode__ = __str__
 
 
 class TestKolbQuestion(models.Model):
-    test = models.ForeignKey(TestKolb)
+    test = models.ForeignKey(TestKolb, null=False, blank=False)
 
-    name = models.CharField(max_length=500)
-    option1 = models.CharField(max_length=100)
-    option2 = models.CharField(max_length=100)
-    option3 = models.CharField(max_length=100)
-    option4 = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    option1 = models.CharField(max_length=150)
+    option2 = models.CharField(max_length=150)
+    option3 = models.CharField(max_length=150)
+    option4 = models.CharField(max_length=150)
 
 
 class AssignTestKolb(models.Model):
-    student = models.ForeignKey(User)
-    test = models.ForeignKey(TestKolb)
+    student = models.ForeignKey(User, null=False, blank=False)
+    test = models.ForeignKey(TestKolb, null=False, blank=False)
     is_finished = models.BooleanField(default=False, blank=False)
+
+    class Meta:
+        unique_together = ("student", "test")
 
 
 class TestKolbAnswer(models.Model):
-    questions = models.ForeignKey(TestKolbQuestion)
-    asignation = models.ForeignKey(AssignTestKolb)
+    question = models.ForeignKey(TestKolbQuestion, null=False, blank=False)
+    assignation = models.ForeignKey(AssignTestKolb, null=False, blank=False)
 
     CHOICES = ((1, 1), (2, 2), (3, 3), (4, 4))
 
-    option1 = models.IntegerField(choices=CHOICES)
-    option2 = models.IntegerField(choices=CHOICES)
-    option3 = models.IntegerField(choices=CHOICES)
-    option4 = models.IntegerField(choices=CHOICES)
+    option1 = models.IntegerField(choices=CHOICES, null=True)
+    option2 = models.IntegerField(choices=CHOICES, null=True)
+    option3 = models.IntegerField(choices=CHOICES, null=True)
+    option4 = models.IntegerField(choices=CHOICES, null=True)
+
+    class Meta:
+        unique_together = ("question", "assignation")

@@ -1,5 +1,4 @@
 const gulp = require("gulp")
-const gulp_typings = require("gulp-typings");
 const gulp_typescript = require("gulp-typescript")
 
 var ts_project = gulp_typescript.createProject("./tsconfig.json");
@@ -12,18 +11,11 @@ var paths = {
     source_files: [
         "./" + source_folder + "/**/*.ts",
         "./" + source_folder + "/**/*.tsx"
-    ],
-    typings: [
-        "./typings/**/*.d.ts"
     ]
 };
 
-gulp.task("install_typings", function () {
-    return gulp.src("./typings.json").pipe(gulp_typings());
-});
-
 gulp.task("compile", function () {
-    return gulp.src(paths.source_files.concat(paths.typings))
+    return gulp.src(paths.source_files)
         .pipe(ts_project()).js
         .pipe(gulp.dest(build_folder));
 });

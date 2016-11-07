@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 from django import forms
-from models import (Institution, Group, User)
-from models import (DOCUMENT_OPTIONS, GENDER_OPTIONS,
-                    ROLE_OPTIONS, SCHEDULE_OPTIONS)
+from models import (DOCUMENT_OPTIONS, GENDER_OPTIONS, ROLE_OPTIONS,
+                    SCHEDULE_OPTIONS, AssignTestKolb, Group, Institution,
+                    TestKolb, TestKolbAnswer, TestKolbQuestion, User)
 
 DATEPICKER = {
     "type": "text",
@@ -210,3 +210,118 @@ class EditUserProfileForm(forms.ModelForm):
         required=True, label="Email", widget=forms.TextInput())
     password = forms.CharField(
         required=True, label="Contraseña", widget=forms.PasswordInput())
+
+
+class CreateTestKolb(forms.ModelForm):
+
+    class Meta:
+        model = TestKolb
+        fields = [
+            "name",
+            "description",
+            "psychologist"
+        ]
+
+    name = forms.CharField(
+        required=False, label="Nombre",
+        widget=forms.TextInput(
+            attrs={"size": 50, "title": "Nombre"}))
+    description = forms.CharField(
+        required=False, label="Descripción",
+        widget=forms.TextInput(
+            attrs={"size": 500, "title": "Descripción"}))
+
+    psychologist = forms.ModelChoiceField(
+        required=True,
+        queryset=User.objects.filter(is_active=True).filter(role="P"))
+
+
+class CreateTestKolbQuestion(forms.ModelForm):
+
+    class Meta:
+        model = TestKolbQuestion
+        fields = [
+            "test",
+            "description",
+            "option1",
+            "option2",
+            "option3",
+            "option4"
+        ]
+
+    test = forms.ModelChoiceField(
+        required=True, queryset=TestKolb.objects.all())
+
+    description = forms.CharField(
+        required=False, label="Descripción",
+        widget=forms.TextInput(
+            attrs={"size": 500, "title": "Descripción"}))
+    option1 = forms.CharField(
+        required=False, label="Opción 1",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 1"}))
+    option2 = forms.CharField(
+        required=False, label="Opción 2",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 2"}))
+    option3 = forms.CharField(
+        required=False, label="Opción 3",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 3"}))
+    option4 = forms.CharField(
+        required=False, label="Opción 4",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 4"}))
+
+
+class CreateTestKolbAnswer(forms.ModelForm):
+
+    class Meta:
+        model = TestKolbAnswer
+        fields = [
+            "test",
+            "description",
+            "option1",
+            "option2",
+            "option3",
+            "option4"
+        ]
+
+    test = forms.ModelChoiceField(
+        required=True, queryset=TestKolb.objects.all())
+
+    description = forms.CharField(
+        required=False, label="Descripción",
+        widget=forms.TextInput(
+            attrs={"size": 500, "title": "Descripción"}))
+    option1 = forms.CharField(
+        required=False, label="Opción 1",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 1"}))
+    option2 = forms.CharField(
+        required=False, label="Opción 2",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 2"}))
+    option3 = forms.CharField(
+        required=False, label="Opción 3",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 3"}))
+    option4 = forms.CharField(
+        required=False, label="Opción 4",
+        widget=forms.TextInput(
+            attrs={"size": 100, "title": "Opción 4"}))
+
+
+class CreateAssignTestKolb(forms.ModelForm):
+
+    class Meta:
+        model = AssignTestKolb
+        fields = [
+            "student",
+            "test"
+        ]
+
+    student = forms.ModelChoiceField(
+        required=True, queryset=User.objects.filter(role="S"))
+    test = forms.ModelChoiceField(
+        required=True, queryset=TestKolb.objects.all())

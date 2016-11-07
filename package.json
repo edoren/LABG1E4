@@ -2,17 +2,17 @@
   "name": "ptti",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "postinstall": "gulp install_typings"
-  },
   "author": "",
   "license": "",
   "dependencies": {
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.0.2",
-    "gulp-typings": "^2.0.4",
-    "typescript": "^2.0.3",
-    "typings": "^1.4.0"
+    "typescript": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^3.3.32",
+    "@types/jquery": "^2.0.33",
+    "@types/react": "^0.14.44",
+    "@types/react-dom": "^0.14.18"
   }
 }

@@ -3,7 +3,7 @@
         "module": "commonjs",
         "target": "es5",
         "jsx": "react",
-        "removeComments": false,
+        "removeComments": true,
         "noImplicitAny": false,
         "sourceMap": false
     },

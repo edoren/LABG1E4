@@ -2,13 +2,21 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.db.models import Q
-from django.shortcuts import redirect, render, render_to_response
+from django.http import Http404
+from django.shortcuts import (get_object_or_404, redirect, render,
+                              render_to_response)
 from psychologyTest.forms import (AddGroupForm, AddInstitutionForm,
-                                  AddUserForm, EditUserProfileForm)
-from psychologyTest.models import Group, Institution, User
-from psychologyTest.util import RedirectToHome
+                                  AddUserForm, CreateAssignTestKolb,
+                                  CreateTestKolb, CreateTestKolbQuestion,
+                                  EditUserProfileForm)
+from psychologyTest.models import (AssignTestKolb, Group, Institution,
+                                   TestKolb, TestKolbAnswer, TestKolbQuestion,
+                                   User)
+from psychologyTest.util import RedirectToHome, try_cast_int
 
 
 def login_page(request):
@@ -51,9 +59,11 @@ def restore_password(request):
             user = None
         if user is not None:
             password = user.password
-            subject = "Alguien solicito reestablecer la contrasena para tu cuenta en PTTI"
-            message = "Hola, alguien solicito recientemente que se restablezca tu contrasena de PTTI. Esta es tu contrasena: {}".format(
-                password)
+            subject = ("Alguien solicito reestablecer la contrasena para "
+                       "tu cuenta en PTTI")
+            message = ("Hola, alguien solicito recientemente que se "
+                       "restablezca tu contrasena de PTTI. "
+                       "Esta es tu contrasena: {}".format(password))
             mail = EmailMessage(subject, message, from_email, [to_email])
             mail.send()
         return redirect("login_page")
@@ -114,7 +124,11 @@ def home_psychologist(request):
     if request.user.role != "P":
         return RedirectToHome(request.user)
 
-    return render(request, "home_psychologist.html",  {})
+    groups = Group.objects.filter(psychologist=request.user)
+
+    return render(request, "home_psychologist.html", {
+        "groups": groups.filter(is_active=True)
+    })
 
 
 @login_required(login_url="/")
@@ -122,7 +136,16 @@ def home_student(request):
     if request.user.role != "S":
         return RedirectToHome(request.user)
 
-    return render(request, "home_student.html",  {})
+    # Get all the asigned tests
+    count = 0
+    for assigned in request.user.assigntestkolb_set.all():
+        count += 1
+
+    print(count)
+
+    return render(request, "home_student.html", {
+
+    })
 
 
 @login_required(login_url="/")
@@ -274,4 +297,193 @@ def edit_profile(request):
     return render(request, "edit_profile.html", {
         "base": BASE[request.user.role],
         "groups": groups
+    })
+
+
+@login_required(login_url="/")
+def manage_tests(request, action=None):
+    if request.user.role != "P":
+        return RedirectToHome(request.user)
+
+    tests = TestKolb.objects.filter(psychologist=request.user.id)
+
+    if action is None:
+        return render(request, "manage_tests.html", {"tests": tests})
+    elif action == "create":
+        new_test = CreateTestKolb({
+            "name": "Untitled Test",
+            "psychologist": request.user.id
+        })
+        if new_test.is_valid():
+            test = new_test.save()
+            test_id = test.id
+            return redirect("kolb_test", action="edit", test_id=test_id)
+    elif action == "assign":
+        test_id = request.GET.get("id")
+        return redirect("kolb_test", action="assign", test_id=test_id)
+    elif action == "edit":
+        test_id = request.GET.get("id")
+        return redirect("kolb_test", action="edit", test_id=test_id)
+    elif action == "remove":
+        test_id = request.GET.get("id")
+        get_object_or_404(TestKolb, pk=test_id).delete()
+        return redirect("manage_tests")
+
+    raise Http404
+
+
+@login_required(login_url="/")
+def kolb_test(request, action=None, test_id=None):
+    if request.user.role != "P":
+        return RedirectToHome(request.user)
+
+    if action is None or test_id is None:
+        raise Http404
+
+    test = get_object_or_404(TestKolb, pk=test_id,
+                             psychologist=request.user.id)
+
+    if action == "assign":
+        data = request.POST.dict()
+        data.update({"test": test.id})
+
+        if request.method == "POST":
+            action = request.POST.get("action")
+            student_id = request.POST.get("student")
+            if action == "add" and student_id != "None":
+                form = CreateAssignTestKolb(data)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print form.errors
+            elif action == "remove":
+                assignation_id = request.POST.get("assignation_id")
+                try:
+                    assignation = AssignTestKolb.objects.get(pk=assignation_id)
+                    assignation.delete()
+                except:
+                    pass
+
+        # Get the users not asigned to this test
+        not_assigned = []
+        for group in request.user.group_set.all():
+            for t in group.studentgroup_set.all():
+                student = AssignTestKolb.objects.filter(student=t.student.id,
+                                                        test=test_id)
+                if student.count() == 0:
+                    not_assigned.append((t.student, t.group))
+
+        return render(request, "assign_test_student.html", {
+            "test": test,
+            "not_assigned": not_assigned
+        })
+    if action == "edit":
+        form = CreateTestKolb(None, instance=test)
+
+        if request.method == "POST":
+            data = request.POST.dict()
+            data.update({"psychologist": request.user.id})
+            form = CreateTestKolb(data, instance=test)
+            if form.is_valid():
+                form.save()
+                return redirect("manage_tests")
+            else:
+                print "Error guardando test"
+                print form.errors
+
+        return render(request, "kolb_test.html", {"form": form, "test": test})
+    else:
+        raise Http404
+
+
+@login_required(login_url="/")
+def kolb_test_question(request, test_id=None, action=None):
+    if request.user.role != "P":
+        return RedirectToHome(request.user)
+
+    if action is None or test_id is None:
+        raise Http404
+
+    test = get_object_or_404(TestKolb, pk=test_id,
+                             psychologist=request.user.id)
+
+    if action == "add":
+        question = None
+    elif action == "edit":
+        question_id = request.GET.get("id")
+        question = get_object_or_404(TestKolbQuestion, pk=question_id)
+    elif action == "remove":
+        question_id = request.GET.get("id")
+        question = get_object_or_404(TestKolbQuestion, pk=question_id)
+        question.delete()
+        return redirect("kolb_test", action="edit", test_id=test_id)
+    else:
+        raise Http404
+
+    form = CreateTestKolbQuestion(None, instance=question)
+
+    if request.method == "POST":
+        data = request.POST.dict()
+        data.update({
+            "test": test.id,
+            "psychologist": request.user.id
+        })
+        form = CreateTestKolbQuestion(data, instance=question)
+        if form.is_valid():
+            form.save()
+            return redirect("kolb_test", action="edit", test_id=test_id)
+        else:
+            print "Error ingresando pregunta"
+            print form.errors
+
+    return render(request, "kolb_test_question.html", {"form": form})
+
+
+@login_required(login_url="/")
+def kolb_test_solve(request, test_id=None):
+    if request.user.role != "S":
+        return RedirectToHome(request.user)
+
+    # Check that the test is assigned to the user
+    assignation = get_object_or_404(AssignTestKolb, test=test_id,
+                                    student=request.user.id)
+    test = assignation.test
+
+    # Retreive all the answers for each question is does not exist
+    # it creates one
+    questions = test.testkolbquestion_set.all()
+    answers = []
+    for question in questions:
+        query = question.testkolbanswer_set.filter(assignation=assignation)
+        if query.count() == 0:
+            answer = TestKolbAnswer(question=question,
+                                    assignation=assignation).save()
+        else:
+            answer = query.first()
+        answers.append(answer)
+
+    if request.method == "POST":
+        data = request.POST
+        option1 = [try_cast_int(x) for x in data.getlist("option1")]
+        option2 = [try_cast_int(x) for x in data.getlist("option2")]
+        option3 = [try_cast_int(x) for x in data.getlist("option3")]
+        option4 = [try_cast_int(x) for x in data.getlist("option4")]
+        rcv_answers = zip(option1, option2, option3, option4)
+        if len(answers) == len(rcv_answers):
+            for answer, rcv_answer in zip(answers, rcv_answers):
+                answer.option1 = rcv_answer[0]
+                answer.option2 = rcv_answer[1]
+                answer.option3 = rcv_answer[2]
+                answer.option4 = rcv_answer[3]
+                answer.save()
+            finished = (True not in [None in x for x in rcv_answers])
+            assignation.is_finished = finished
+            assignation.save()
+        return redirect("home_student")
+
+    q_and_a = zip(questions, answers)
+
+    return render(request, "kolb_test_solve.html", {
+        "test": test,
+        "q_and_a": q_and_a
     })

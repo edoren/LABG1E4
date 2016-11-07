@@ -1,0 +1,115 @@
+{% extends "base_student.html" %}
+
+{% block title %}Solucionar Test de Kolb{% endblock %}
+
+{% block page-content %}
+<form class="col-xs" method="POST">
+{% csrf_token %}
+<div class="row flex-items-md-middle">
+  <div class="col-xs">
+    <div class="row flex-items-md-middle">
+      <div class="col-xs-10 p-l-0">
+        <h2>Solucionar Test de Kolb</h2>
+      </div>
+      <div class="col-xs-2 p-l-0  pull-xs-right">
+        <button class="btn btn-success" type="submit">Guardar y Salir</button>
+      </div>
+    </div>
+    <div class="row m-b-1 flex-items-md-middle">
+      <div class="col-md-12">
+        <label class="font-weight-bold">Nombre</label>
+        <p>{{ test.name }}</p>
+      </div>
+    </div>
+    <div class="row flex-items-md-middle">
+      <div class="col-md-12">
+        <label class="font-weight-bold">Descripción</label>
+        <p>{{ test.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+{% for question, answer in q_and_a %}
+<input name="question_id" value="{{ question.pk }}" hidden></input>
+<div class="row flex-items-md-middle">
+  <div class="col-md-10">
+    <div class="row flex-items-md-middle">
+      <div class="col-md-12">
+        <label><strong>{{ forloop.counter }}.</strong> {{ question.description }}</label>
+      </div>
+    </div>
+    <div class="p-l-1">
+      <div class="row flex-items-md-middle">
+        <div class="col-md-12">
+          <label class="font-weight-bold font-italic">Opciones</label>
+        </div>
+      </div>
+      <div class="row m-b-1 flex-items-md-middle">
+        <div class="col-md-12">
+          <ol class="m-b-0">
+            <li>
+              {{ question.option1 }}
+              <select name="option1" class="custom-select option" data-selected="{{ answer.option1 }}">
+                <option value="None">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+            <li>
+              {{ question.option2 }}
+              <select name="option2" class="custom-select option" data-selected="{{ answer.option2 }}">
+                <option value="None">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+            <li>
+              {{ question.option3 }}
+              <select name="option3" class="custom-select option" data-selected="{{ answer.option3 }}">
+                <option value="None">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+            <li>
+              {{ question.option4 }}
+              <select name="option4" class="custom-select option" data-selected="{{ answer.option4 }}">
+                <option value="None">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+{% endfor %}
+</form>
+
+<div id="confirm_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="row m-a-2">
+        <div class="col-xs text-xs-center">
+          <h2>Cuidado</h2>
+          <p>¿Está seguro que desea eliminar esta pregunta?, esto eliminara toda respuesta asociada al mismo. Este proceso no se puede revertir</p>
+          <a href="javascript:void(0)" class="btn btn-success" data-dismiss="modal">Cancelar</a>
+          <a href="javascript:void(0)" class="btn btn-danger" onclick="remove_question()">Eliminar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

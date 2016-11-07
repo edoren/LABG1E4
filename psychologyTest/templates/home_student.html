@@ -29,15 +29,25 @@
                 <th>Estado</th>
                 <th>Resultado</th>
                 <th>Diagnostico</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
+              {% for assigned in user.assigntestkolb_set.all %}
               <tr>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>{{ assigned.test.name }}</td>
+                <td>{{ assigned.is_finished|yesno:"Finalizado,No Finalizado" }}</td>
+                <td>TODO</td>
+                <td>TODO</td>
+                <td>
+                  {% if assigned.is_finished %}
+                  <a href="{% url 'kolb_test_solve' assigned.test.id %}" class="btn btn-warning">Ver Resultados</a></br>
+                  {% else %}
+                  <a href="{% url 'kolb_test_solve' assigned.test.id %}" class="btn btn-success">Solucionar</a></br>
+                  {% endif %}
+                </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -48,7 +58,7 @@
     <div class="card">
       <div class="card-block">
         <h2>Diagnóstico</h2>
-        <p>Lorem ipsum dolor sit amet, lorem mandamus assentior ut mea, at summo detracto scribentur sea, mea officiis repudiandae te. Et reque efficiendi vel. Usu iusto dolor elaboraret at, facer aliquam cum et. Decore accusamus torquatos quo no. Vix liber persius ancillae ne, nullam vivendum philosophia ne pro.</p>
+        <p id="diagnostic">Lorem ipsum dolor sit amet, lorem mandamus assentior ut mea, at summo detracto scribentur sea, mea officiis repudiandae te. Et reque efficiendi vel. Usu iusto dolor elaboraret at, facer aliquam cum et. Decore accusamus torquatos quo no. Vix liber persius ancillae ne, nullam vivendum philosophia ne pro.</p>
       </div>
     </div>
   </div>
