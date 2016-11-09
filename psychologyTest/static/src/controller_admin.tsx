@@ -1,5 +1,3 @@
-var csrftoken = getCookie("csrftoken");
-
 // Disable the modify and remove buttons if no row is selected
 $("#modify-btn").prop("disabled", true);
 $("#remove-btn").prop("disabled", true);
