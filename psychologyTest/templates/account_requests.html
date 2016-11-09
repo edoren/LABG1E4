@@ -23,16 +23,16 @@
           </tr>
         </thead>
         <tbody>
-        {% for pu in user_profile %}
-          <tr user-id="{{ pu.id }}">
-            <td>{{ pu.document_number }}</td>
-            <td>{{ pu.first_name }}</td>
-            <td>{{ pu.last_name }}</td>
-            <td>{{ pu.email }}</td>
-            <td>{{ pu.role }}</td>
+        {% for req in requested_accounts %}
+          <tr>
+            <td>{{ req.user.document_number }}</td>
+            <td>{{ req.user.first_name }}</td>
+            <td>{{ req.user.last_name }}</td>
+            <td>{{ req.user.email }}</td>
+            <td>{{ req.user.role }}</td>
             <td>
-              <button class="btn btn-success" type="submit">Aceptar</button>
-              <button class="btn btn-danger" type="submit">Rechazar</button>
+              <a href="?accept={{ req.user.id }}" class="btn btn-success" type="submit">Aceptar</a>
+              <a href="?deny={{ req.user.id }}" class="btn btn-danger" type="submit">Rechazar</a>
             </td>
           </tr>
         {% endfor %}

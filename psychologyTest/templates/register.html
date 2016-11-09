@@ -24,25 +24,40 @@
       <h2>Registrarse</h2>
   </div>
 </div>
+{% if message_error %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+  </button>
+  <div class="font-weight-bold">Error:</div> {{ message_error }}
+</div>
+{% endif %}
+{% if message_success %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+  </button>
+  {{ message_success }}
+</div>
+{% endif %}
 <div class="row">
-  <form class="col-xs-8 m-x-auto p-y-1">
+  <form class="col-xs-8 m-x-auto p-y-1" method="POST">
     {% csrf_token %}
     <div class="card">
       <div class="card-block p-x-3">
         <div class="form-group row flex-items-md-middle">
-          <label for="role-input" class="col-md-3 col-form-label">Rol</label>
+          <label class="col-md-3 col-form-label">Rol</label>
           <div class="col-md-9">
-            <select name="gender" class="custom-select w-100">
-              <!--<option value="A" selected>Administrador</option>-->
+            <select name="{{ form.role.html_name }}" class="custom-select w-100">
               <option value="P">Psicólogo</option>
-              <option value="E">Estudiante</option>
+              <option value="S">Estudiante</option>
             </select>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="id-type-input" class="col-md-3 col-form-label">Tipo de identificación</label>
+          <label class="col-md-3 col-form-label">Tipo de identificación</label>
           <div class="col-md-9">
-            <select name="document_type" class="custom-select w-100">
+            <select name="{{ form.document_type.html_name }}" class="custom-select w-100">
               <option value="TI">Tarjeta de Identidad</option>
               <option value="CC" selected>Cédula de Ciudadanía</option>
               <option value="CE">Cédula de Extranjería</option>
@@ -50,35 +65,34 @@
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="id-number-input" class="col-md-3 col-form-label">Número de identificación</label>
+          <label class="col-md-3 col-form-label">Número de identificación</label>
           <div class="col-md-9">
-            <input name="document_number" type="text" id="input_no_documento" class="form-control" placeholder="Número Documento" required>
+            <input name="{{ form.document_number.html_name }}" value="{{ form.document_number.value|default_if_none:'' }}" type="text" class="form-control" placeholder="Número Documento" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="name-input" class="col-md-3 col-form-label">Nombres</label>
+          <label class="col-md-3 col-form-label">Nombres</label>
           <div class="col-md-9">
-            <input name="first_name" type="text" id="input_nombre" class="form-control" placeholder="Primero" required>
-            <input name="segundo_nombre" type="text" id="input_nombre" class="form-control" placeholder="Segundo">
+            <input name="{{ form.first_name.html_name }}" value="{{ form.first_name.value|default_if_none:'' }}" type="text" class="form-control" placeholder="Nombres" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="lastname-input" class="col-md-3 col-form-label">Apellidos</label>
+          <label class="col-md-3 col-form-label">Apellidos</label>
           <div class="col-md-9">
-            <input name="last_name" type="text" id="input_apellido" class="form-control w-50" placeholder="Primero" required>
-            <input name="segundo_apellido" type="text" id="input_apellido" class="form-control w-50" placeholder="Segundo">
+            <input name="{{ form.last_name.html_name }}" value="{{ form.last_name.value|default_if_none:'' }}" type="text" class="form-control w-50" placeholder="Apellidos" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
+          <label class="col-md-3 col-form-label">Fecha de Nacimiento</label>
           <div class="col-md-9">
-            <input name="birthdate" type="date" id="datepicker" class="form-control" placeholder="DD/MM/YY" required>
+            <input id="birthdate" readonly="readonly" type="text" class="form-control" placeholder="DD/MM/YY" required>
+            <input id="birthdate-alt" name="{{ form.birthdate.html_name }}" type="text" hidden>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="gender-input" class="col-md-3 col-form-label">Genero</label>
+          <label class="col-md-3 col-form-label">Género</label>
           <div class="col-md-9">
-            <select name="gender" class="custom-select w-100">
+            <select name="{{ form.gender.html_name }}" class="custom-select w-100">
               <option value="M">Masculino</option>
               <option value="F" selected>Femenino</option>
               <option value="O">Other</option>
@@ -86,39 +100,33 @@
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="address-input" class="col-md-3 col-form-label">Dirección</label>
+          <label class="col-md-3 col-form-label">Dirección</label>
           <div class="col-md-9">
-            <input name="address" type="text" class="form-control" placeholder="Dirección" required>
+            <input name="{{ form.address.html_name }}" value="{{ form.address.value|default_if_none:'' }}" type="text" class="form-control" placeholder="Dirección" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="phone-input" class="col-md-3 col-form-label">Teléfono</label>
+          <label class="col-md-3 col-form-label">Teléfono</label>
           <div class="col-md-9">
-            <input name="phone" type="tel" class="form-control" placeholder="Teléfono" required>
+            <input name="{{ form.phone.html_name }}" value="{{ form.phone.value|default_if_none:'' }}" type="tel" class="form-control" placeholder="Teléfono" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="email-input" class="col-md-3 col-form-label">Email</label>
+          <label class="col-md-3 col-form-label">Email</label>
           <div class="col-md-9">
-            <input name="email" type="email" class="form-control" placeholder="Email" required>
+            <input name="{{ form.email.html_name }}" value="{{ form.email.value|default_if_none:'' }}" type="email" class="form-control" placeholder="Email" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="formd-password" class="col-md-3 col-form-label">Contraseña</label>
+          <label class="col-md-3 col-form-label">Contraseña</label>
           <div class="col-md-9">
-            <input name="password" type="password" class="form-control" placeholder="Contraseña" required>
+            <input name="{{ form.password.html_name }}" value="{{ form.password.value|default_if_none:'' }}" type="password" class="form-control" placeholder="Contraseña" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
-          <label for="formd-password-repeat" class="col-md-3 col-form-label">Repetir Contraseña</label>
+          <label class="col-md-3 col-form-label">Repetir Contraseña</label>
           <div class="col-md-9">
-            <input name="repetir_password" type="password" class="form-control" placeholder="Repetir Contraseña" required>
-          </div>
-        </div>
-        <div class="form-group row flex-items-md-middle">
-          <label for="group-input" class="col-md-3 col-form-label">Grupo</label>
-          <div class="col-md-9">
-            <input name="groups" type="text" class="form-control" placeholder="Grupo" required>
+            <input name="{{ form.password.html_name }}" value="{{ form.password.value|default_if_none:'' }}" type="password" class="form-control" placeholder="Repetir Contraseña" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
@@ -131,9 +139,18 @@
     </div>
   </form>
 </div>
+
 <script>
 $(function() {
-    $("#datepicker").datepicker({showAnim: 'slideDown'});
+    $("#birthdate").datepicker({
+        altField: "#birthdate-alt",
+        altFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy",
+        showAnim: "slideDown",
+        yearRange: "-100:+0"
+    });
 });
 </script>
 {% endblock %}

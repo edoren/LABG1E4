@@ -13,9 +13,9 @@ from psychologyTest.forms import (AddGroupForm, AddInstitutionForm,
                                   AddUserForm, CreateAssignTestKolb,
                                   CreateTestKolb, CreateTestKolbQuestion,
                                   EditUserProfileForm)
-from psychologyTest.models import (AssignTestKolb, Group, Institution,
-                                   StudentGroup, TestKolb, TestKolbAnswer,
-                                   TestKolbQuestion, User)
+from psychologyTest.models import (AccountRequest, AssignTestKolb, Group,
+                                   Institution, StudentGroup, TestKolb,
+                                   TestKolbAnswer, TestKolbQuestion, User)
 from psychologyTest.util import RedirectToHome, try_cast_int
 
 
@@ -46,7 +46,28 @@ def login_page(request):
 
 
 def register(request):
-    return render(request, "register.html", {})
+    data = request.POST.dict()
+    data.update({"is_active": False})
+    form = AddUserForm(request.POST)
+    message_error = None
+
+    if request.method == "POST":
+        if form.is_valid():
+            usuario = form.save()
+            AccountRequest(user=usuario).save()
+            if usuario.role == "S":
+                StudentGroup(student=usuario, group=None).save()
+            form = AddUserForm(None)
+            message_success = ("Registro exitoso. Por favor espere a que un "
+                               "administrador active su cuenta")
+        else:
+            message_error = form.errors
+
+    return render(request, "register.html", {
+        "form": form,
+        "message_success": message_success,
+        "message_error": message_error
+    })
 
 
 def restore_password(request):
@@ -145,9 +166,7 @@ def home_student(request):
 
     print(count)
 
-    return render(request, "home_student.html", {
-
-    })
+    return render(request, "home_student.html", {})
 
 
 @login_required(login_url="/")
@@ -155,7 +174,27 @@ def account_requests(request):
     if request.user.role != "A":
         return RedirectToHome(request.user)
 
-    return render(request, "account_requests.html", {})
+    requested_accounts = AccountRequest.objects.all()
+
+    if request.method == "GET":
+        accept = request.GET.get("accept")
+        deny = request.GET.get("deny")
+        user_id = accept or deny
+        if (user_id is not None):
+            try:
+                acc = AccountRequest.objects.get(user=user_id)
+                if accept:
+                    acc.user.is_active = True
+                    acc.user.save()
+                elif deny:
+                    acc.user.delete()
+                acc.delete()
+            except:
+                pass
+
+    return render(request, "account_requests.html", {
+        "requested_accounts": requested_accounts
+    })
 
 
 @login_required(login_url="/")

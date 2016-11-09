@@ -27,7 +27,6 @@ class AddUserForm(forms.ModelForm):
             "address",
             "phone",
             "role",
-            # "group",
             "is_active"
         ]
 
