@@ -14,8 +14,8 @@ from psychologyTest.forms import (AddGroupForm, AddInstitutionForm,
                                   CreateTestKolb, CreateTestKolbQuestion,
                                   EditUserProfileForm)
 from psychologyTest.models import (AssignTestKolb, Group, Institution,
-                                   TestKolb, TestKolbAnswer, TestKolbQuestion,
-                                   User)
+                                   StudentGroup, TestKolb, TestKolbAnswer,
+                                   TestKolbQuestion, User)
 from psychologyTest.util import RedirectToHome, try_cast_int
 
 
@@ -94,6 +94,8 @@ def home_admin(request):
                 usuario = form.save(commit=False)
                 usuario.is_active = True
                 usuario.save()
+                if usuario.role == "S":
+                    StudentGroup(student=usuario, group=None).save()
             else:
                 print form.errors
         elif action == "modify":
@@ -239,7 +241,7 @@ def manage_institutions(request):
 
 
 @login_required(login_url="/")
-def assign_groups(request):
+def assign_workloads(request):
     if request.user.role != "A":
         return RedirectToHome(request.user)
 
@@ -250,27 +252,63 @@ def assign_groups(request):
         action = request.POST.get("action")
         if action == "add":
             try:
-                group_id = int(request.POST.get("group"))
-                psychologist_id = int(request.POST.get("psychologist"))
+                group_id = request.POST.get("group")
+                psychologist_id = request.POST.get("psychologist")
                 group = Group.objects.get(pk=group_id)
                 psychologist = User.objects.get(pk=psychologist_id)
                 group.psychologist = psychologist
                 group.save()
             except:
                 print "Error error can not assign group"
-        if action == "remove":
+        elif action == "remove":
             try:
-                group_id = int(request.POST.get("group"))
+                group_id = request.POST.get("group")
                 group = Group.objects.get(pk=group_id)
                 group.psychologist = None
                 group.save()
             except:
                 print "Error error can not remove psychologist from group"
 
-    return render(request, "assign_groups.html", {
+    return render(request, "assign_workloads.html", {
         "asigned_groups": groups.filter(~Q(psychologist=None)),
         "not_asigned_groups": groups.filter(Q(psychologist=None)),
         "psychologists": psychologists
+    })
+
+
+@login_required(login_url="/")
+def assign_group_student(request, group_id=None):
+    if request.user.role != "A":
+        return RedirectToHome(request.user)
+
+    group = get_object_or_404(Group, pk=group_id)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "add":
+            try:
+                student_id = request.POST.get("student")
+                assign = StudentGroup.objects.get(student=student_id)
+                assign.group = group
+                assign.save()
+            except:
+                print "Error assigning user"
+        elif action == "remove":
+            try:
+                assign_id = request.POST.get("assignation")
+                assign = StudentGroup.objects.get(pk=assign_id)
+                assign.group = None
+                assign.save()
+            except:
+                print "Error error can not remove psychologist from group"
+
+    assignations = StudentGroup.objects.filter(group=group)
+
+    not_assigned = StudentGroup.objects.filter(group=None)
+
+    return render(request, "assign_group_student.html", {
+        "assignations": assignations,
+        "not_assigned": not_assigned
     })
 
 

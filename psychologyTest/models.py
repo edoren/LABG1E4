@@ -104,8 +104,8 @@ class Group(models.Model):
 
 
 class StudentGroup(models.Model):
-    student = models.ForeignKey(User, null=False, blank=False)
-    group = models.ForeignKey(Group, null=False, blank=False)
+    student = models.OneToOneField(User)
+    group = models.ForeignKey(Group, null=True)
 
     class Meta:
         unique_together = ("student", "group")
@@ -125,11 +125,11 @@ class TestKolb(models.Model):
 class TestKolbQuestion(models.Model):
     test = models.ForeignKey(TestKolb, null=False, blank=False)
 
-    description = models.CharField(max_length=1000)
-    option1 = models.CharField(max_length=150)
-    option2 = models.CharField(max_length=150)
-    option3 = models.CharField(max_length=150)
-    option4 = models.CharField(max_length=150)
+    description = models.CharField(max_length=2000)
+    option1 = models.CharField(max_length=200)
+    option2 = models.CharField(max_length=200)
+    option3 = models.CharField(max_length=200)
+    option4 = models.CharField(max_length=200)
 
 
 class AssignTestKolb(models.Model):
@@ -154,3 +154,7 @@ class TestKolbAnswer(models.Model):
 
     class Meta:
         unique_together = ("question", "assignation")
+
+
+class AccountRequest(models.Model):
+    user = models.ForeignKey(User)

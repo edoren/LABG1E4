@@ -32,20 +32,20 @@
             <th>Grado</th>
             <th>Jornada</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
         {% for gr in groups %}
-          <tr data-pk="{{ gr.id }}"
-              data-name="{{ gr.name }}"
-              data-institution="{{ gr.institution.pk }}"
-              data-grade="{{ gr.grade }}"
-              data-schedule="{{ gr.schedule }}">
+          <tr>
             <td>{{ gr.name }}</td>
             <td>{{ gr.institution.name }}</td>
             <td>{{ gr.grade }}</td>
             <td>{{ gr.get_schedule_display }}</td>
             <td>{{ gr.is_active|yesno:"Activo,Inactivo" }}</td>
+            <td>
+              <a href="assign/{{ gr.id }}" class="btn btn-success manage-groups">Asignar Estudiantes</a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
