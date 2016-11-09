@@ -49,6 +49,7 @@ def register(request):
     data = request.POST.dict()
     data.update({"is_active": False})
     form = AddUserForm(request.POST)
+    message_success = None
     message_error = None
 
     if request.method == "POST":
