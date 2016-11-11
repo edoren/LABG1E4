@@ -37,7 +37,11 @@
         </thead>
         <tbody>
         {% for gr in groups %}
-          <tr>
+          <tr data-pk="{{ gr.id }}"
+              data-name="{{ gr.name }}"
+              data-institution="{{ gr.institution.pk }}"
+              data-grade="{{ gr.grade }}"
+              data-schedule="{{ gr.schedule }}">
             <td>{{ gr.name }}</td>
             <td>{{ gr.institution.name }}</td>
             <td>{{ gr.grade }}</td>

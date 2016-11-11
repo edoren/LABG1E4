@@ -1,0 +1,52 @@
+{% extends "base_student.html" %}
+
+{% block title %}Resultados Test de Kolb{% endblock %}
+
+{% block page-content %}
+<div class="row m-b-1">
+  <div class="col-md-8">
+    <h2>Resultados Test: {{ test.name }}</h2>
+  </div>
+  <div class="col-xs-4 p-r-0">
+    <div class="pull-xs-right">
+      <a href="{% url 'home_student' %}" class="btn btn-warning" type="submit">Salir</a>
+    </div>
+  </div>
+</div>
+<div class="row flex-items-md-middle">
+  <div class="col-md-12">
+    <label class="font-weight-bold font-italic">Tipo de Aprendizaje</label>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <label>
+    <p>{{ learning_type.name }}</p>
+  </div>
+</div>
+<div class="row flex-items-md-middle">
+  <div class="col-md-12">
+    <label class="font-weight-bold font-italic">Descripción</label>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <label>
+    <p>{{ learning_type.description }}</p>
+  </div>
+</div>
+<div class="row flex-items-md-middle">
+  <div class="col-md-12">
+    <label class="font-weight-bold font-italic">Características</label>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="row">
+      {% for carac in learning_type.caracteristics %}
+      <li class="col-xs-4">{{ carac }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

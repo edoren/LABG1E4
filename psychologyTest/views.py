@@ -160,13 +160,6 @@ def home_student(request):
     if request.user.role != "S":
         return RedirectToHome(request.user)
 
-    # Get all the asigned tests
-    count = 0
-    for assigned in request.user.assigntestkolb_set.all():
-        count += 1
-
-    print(count)
-
     return render(request, "home_student.html", {})
 
 
@@ -514,7 +507,10 @@ def kolb_test_question(request, test_id=None, action=None):
             print "Error ingresando pregunta"
             print form.errors
 
-    return render(request, "kolb_test_question.html", {"form": form})
+    return render(request, "kolb_test_question.html", {
+        "test_id": test.id,
+        "form": form
+    })
 
 
 @login_required(login_url="/")
@@ -564,4 +560,73 @@ def kolb_test_solve(request, test_id=None):
     return render(request, "kolb_test_solve.html", {
         "test": test,
         "q_and_a": q_and_a
+    })
+
+
+@login_required(login_url="/")
+def kolb_test_result(request, test_id=None):
+    if request.user.role != "S":
+        return RedirectToHome(request.user)
+
+    # Check that the test is assigned to the user
+    assignation = get_object_or_404(AssignTestKolb, test=test_id,
+                                    student=request.user.id)
+    test = assignation.test
+
+    if not assignation.is_finished:
+        raise Http404
+
+    default_num_questions = 9
+    max_calification = 9 * 4
+
+    answers = assignation.testkolbanswer_set.all()
+
+    learning_styles = {
+        "convergent": {
+            "name": "Convergente",
+            "description": "Su punto más fuerte reside en la aplicación práctica de las ideas. Esta persona se desempeña mejor en las pruebas que requieren una sola respuesta o solución concreta para una pregunta o problema. Organiza sus conocimientos de manera que se pueda concretar en resolver problemas usando razonamiento hipotético deductivo. Estas personas se orientan más a las cosas que a las personas. Tienden a tener menos intereses por la materia física y se orientan a la especialización científica.",
+            "caracteristics": ["Pragmático", "Racional", "Analítico", "Organizado",
+                       "Buen discriminador", "Orientado a la tarea",
+                       "Disfruta aspectos técnicos", "Insensible", "Deductivo",
+                       "Gusta de la experimentación", "Es poco empático",
+                       "Hermético", "Poco imaginativo", "Buen líder"]
+        },
+        "divergent": {
+            "name": "Divergente",
+            "description": "Se desempeña mejor en cosas concretas (EC) y la observación reflexiva (OR). Su punto más fuerte es la capacidad imaginativa. Se destaca porque tiende a considerar situaciones concretas desde muchas perspectivas. Se califica este estilo como “divergente” porque es una persona que funciona bien en situaciones que exigen producción de ideas (como en la “lluvia de ideas”).",
+            "caracteristics": ["Sociable", "Sintetiza bien", "Genera ideas", "Soñador", "Valora la comprensión", "Orientado a las personas", "Espontáneo", "Disfruta el descubrimiento", "Empático", "Abierto", "Muy imaginativo", "Emocional", "Flexible", "Intuitivo"]
+        },
+        "assimilative": {
+            "name": "Asimilador",
+            "description": "Predomina en esta persona la conceptualización abstracta (CA) y la observación reflexiva (OR). Su punto más fuerte lo tiene en la capacidad de crear modelos teóricos. Se caracteriza por un razonamiento inductivo y poder juntar observaciones dispares en una explicación integral. Se interesa menos por las personas que por los conceptos abstractos, y dentro de éstos prefiere lo teórico a la aplicación práctica. Suele ser un científico o un investigador.",
+            "caracteristics": ["Poco sociable", "Sintetiza bien", "Genera modelos", "Reflexivo", "Pensador abstracto", "Poco sensible", "Orientado a la reflexión", "Disfruta la teoría", "Disfruta hacer teoría", "Poco empático", "Hermético", "Disfruta el diseño", "Planificador", "Investigador"]
+        },
+        "accommodative": {
+            "name": "Acomodador",
+            "description": "Se desempeña mejor en la experiencia concreta (EC) y la experimentación activa (EA). Su punto más fuerte reside en hacer cosas e involucrarse en experiencias nuevas. Suele arriesgarse más que las personas de los otros tres estilos de aprendizaje. Se lo llama “acomodador” porque se destaca en situaciones donde hay que adaptarse a circunstancias inmediatas específicas. Es pragmático, en el sentido de descartar una teoría sobre lo que hay que hacer, si ésta no se aviene con los “hechos”. El acomodador se siente cómodo con las personas, aunque a veces se impacienta y es “atropellador”. Este tipo suele encontrarse dedicado a la política, a la docencia, a actividades técnicas o prácticas, como los negocios.",
+            "caracteristics": ["Sociable", "Organizado", "Acepta retos", "Flexible", "Impulsivo", "Busca objetivos", "Comprometido", "Orientado a la acción", "Dependiente de los demás", "Poca habilidad analítica", "Empático", "Abierto", "Asistemático", "Espontáneo"]
+        }
+    }
+
+    scores = {"EC": 0, "OR": 0, "CA": 0, "EA": 0}
+    for answer in answers:
+        scores["EC"] += answer.option1
+        scores["OR"] += answer.option2
+        scores["CA"] += answer.option3
+        scores["EA"] += answer.option4
+
+    max_area = (answers.count() * 4) * 2
+
+    scores = {
+        "convergent": (scores["CA"] * scores["EA"]) / 2,
+        "divergent": (scores["EC"] * scores["OR"]) / 2,
+        "assimilative": (scores["CA"] * scores["OR"]) / 2,
+        "accommodative": (scores["EC"] * scores["EA"]) / 2
+    }
+
+    greatest_learning_style = max(scores, key=scores.get)
+
+    return render(request, "kolb_test_result.html", {
+        "test": test,
+        "learning_type": learning_styles[greatest_learning_style]
     })

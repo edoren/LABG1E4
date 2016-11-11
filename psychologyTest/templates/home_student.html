@@ -41,7 +41,7 @@
                 <td>TODO</td>
                 <td>
                   {% if assigned.is_finished %}
-                  <a href="{% url 'kolb_test_solve' assigned.test.id %}" class="btn btn-warning">Ver Resultados</a></br>
+                  <a href="{% url 'kolb_test_result' assigned.test.id %}" class="btn btn-warning">Ver Resultados</a></br>
                   {% else %}
                   <a href="{% url 'kolb_test_solve' assigned.test.id %}" class="btn btn-success">Solucionar</a></br>
                   {% endif %}

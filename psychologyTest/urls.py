@@ -30,4 +30,6 @@ urlpatterns = [
         views.kolb_test_question, name="kolb_test_question"),
     url(r"^solve/kolb_test/(?P<test_id>\d+)/$",
         views.kolb_test_solve, name="kolb_test_solve"),
+    url(r"^results/kolb_test/(?P<test_id>\d+)/$",
+        views.kolb_test_result, name="kolb_test_result"),
 ]
