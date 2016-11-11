@@ -49,8 +49,11 @@
           <label class="col-md-3 col-form-label">Rol</label>
           <div class="col-md-9">
             <select name="{{ form.role.html_name }}" class="custom-select w-100">
-              <option value="P">Psicólogo</option>
-              <option value="S">Estudiante</option>
+              {% for value, text in form.fields.role.choices %}
+                {% if value == "P" or value == "S" %}
+                  <option value="{{ value }}"{% if form.fields.role.value == x %} selected{% endif %}>{{ text }}</option>
+                {% endif %}
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -58,9 +61,9 @@
           <label class="col-md-3 col-form-label">Tipo de identificación</label>
           <div class="col-md-9">
             <select name="{{ form.document_type.html_name }}" class="custom-select w-100">
-              <option value="TI">Tarjeta de Identidad</option>
-              <option value="CC" selected>Cédula de Ciudadanía</option>
-              <option value="CE">Cédula de Extranjería</option>
+              {% for value, text in form.fields.document_type.choices %}
+                <option value="{{ value }}"{% if form.fields.document_type.value == x %} selected{% endif %}>{{ text }}</option>
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -85,17 +88,16 @@
         <div class="form-group row flex-items-md-middle">
           <label class="col-md-3 col-form-label">Fecha de Nacimiento</label>
           <div class="col-md-9">
-            <input id="birthdate" readonly="readonly" type="text" class="form-control" placeholder="DD/MM/YY" required>
-            <input id="birthdate-alt" name="{{ form.birthdate.html_name }}" type="text" hidden>
+            <input id="birthdate" name="{{ form.birthdate.html_name }}" value="{{ form.birthdate.value|default_if_none:'' }}" type="text" class="form-control" placeholder="DD/MM/YY" required>
           </div>
         </div>
         <div class="form-group row flex-items-md-middle">
           <label class="col-md-3 col-form-label">Género</label>
           <div class="col-md-9">
             <select name="{{ form.gender.html_name }}" class="custom-select w-100">
-              <option value="M">Masculino</option>
-              <option value="F" selected>Femenino</option>
-              <option value="O">Other</option>
+            {% for value, text in form.fields.gender.choices %}
+              <option value="{{ value }}"{% if form.fields.gender.value == x %} selected{% endif %}>{{ text }}</option>
+            {% endfor %}
             </select>
           </div>
         </div>
@@ -143,8 +145,6 @@
 <script>
 $(function() {
     $("#birthdate").datepicker({
-        altField: "#birthdate-alt",
-        altFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         dateFormat: "dd/mm/yy",

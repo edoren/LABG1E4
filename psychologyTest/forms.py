@@ -4,12 +4,6 @@ from models import (DOCUMENT_OPTIONS, GENDER_OPTIONS, ROLE_OPTIONS,
                     SCHEDULE_OPTIONS, AssignTestKolb, Group, Institution,
                     TestKolb, TestKolbAnswer, TestKolbQuestion, User)
 
-DATEPICKER = {
-    "type": "text",
-    "class": "form-control",
-    "id": "datetimepicker4"
-}
-
 
 class AddUserForm(forms.ModelForm):
 
@@ -49,7 +43,9 @@ class AddUserForm(forms.ModelForm):
             attrs={"size": 20, "title": "Apellido"}))
     birthdate = forms.DateField(
         required=True, label="Fecha de nacimiento",
-        widget=forms.DateInput(attrs=DATEPICKER))
+        input_formats=["%Y-%m-%d",
+                       "%d/%m/%Y",
+                       "%d/%m/%y"])
     address = forms.CharField(
         required=True, label="Dirección de Residencia",
         widget=forms.TextInput(

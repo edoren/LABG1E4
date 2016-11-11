@@ -23,7 +23,6 @@ $("#modify-btn.manage-users").click(function() {
     $("#formd-first-surname").val(selected_row.attr("data-last-name"));
     $("#formd-second-surname").val(selected_row.attr("data-second-surname"));
     $("#formd-born-date").val(selected_row.attr("data-born-date"));
-    $("#formd-born-date-alt").val(selected_row.attr("data-born-date-alt"));
     $("#formd-gender").val(selected_row.attr("data-gender"));
     $("#formd-address").val(selected_row.attr("data-address"));
     $("#formd-phone").val(selected_row.attr("data-phone"));

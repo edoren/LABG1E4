@@ -44,7 +44,6 @@
               data-first-name="{{ usr.first_name }}"
               data-last-name="{{ usr.last_name }}"
               data-born-date="{{ usr.birthdate|date:'d/m/Y' }}"
-              data-born-date-alt="{{ usr.birthdate|date:'Y-m-d' }}"
               data-address="{{ usr.address }}"
               data-phone="{{ usr.phone }}"
               data-email="{{ usr.email }}"
@@ -68,8 +67,11 @@
 <div id="user-form" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" >
     <div class="modal-content">
+      <button type="button" class="close m-t-1 m-r-2" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+      </button>
       <div class="row m-a-0">
-        <form class="col-xs p-a-3" method="POST">
+        <form class="col-xs p-y-3 p-l-3 p-r-1" method="POST">
           {% csrf_token %}
           <div class="form-group row flex-items-md-middle">
             <label for="role-input" class="col-md-3 col-form-label">Rol</label>
@@ -111,10 +113,9 @@
           <div class="form-group row flex-items-md-middle">
             <label for="born-date-input" class="col-md-3 col-form-label">Fecha de Nacimiento</label>
             <div class="col-md-9">
-              <input id="formd-born-date" readonly="readonly" type="text" class="form-control" placeholder="DD/MM/YY" required>
+              <input name="birthdate" id="formd-born-date" readonly="readonly" type="text" class="form-control" placeholder="DD/MM/YY" required>
             </div>
           </div>
-          <input name="birthdate" type="text" id="formd-born-date-alt" hidden>
           <div class="form-group row flex-items-md-middle">
             <label for="formd-gender" class="col-md-3 col-form-label">Genero</label>
             <div class="col-md-9">
@@ -183,8 +184,8 @@
       <div class="row m-a-0">
         <div class="col-xs text-xs-center p-a-2">
           <p>Está seguro que desea eliminar este registro de la base de datos</p>
-          <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary remove">Eliminar</button>
+          <button class="btn btn-success" data-dismiss="modal">Cancelar</button>
+          <button class="btn btn-danger remove">Eliminar</button>
         </div>
       </div>
     </div>
@@ -194,8 +195,6 @@
 <script>
 $(function() {
     $("#formd-born-date").datepicker({
-        altField: "#formd-born-date-alt"
-        altFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         dateFormat: "dd/mm/yy",
